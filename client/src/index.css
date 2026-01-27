@@ -43,6 +43,35 @@ body {
   background-color: var(--bg-color);
   color: var(--text-main);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* Mobile optimizations */
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+/* Safe area for notched devices */
+@supports (padding: max(0px)) {
+  body {
+    padding-left: max(0px, env(safe-area-inset-left));
+    padding-right: max(0px, env(safe-area-inset-right));
+  }
+}
+
+/* Prevent zoom on input focus (iOS) */
+input,
+select,
+textarea {
+  font-size: 16px;
+}
+
+@media (max-width: 768px) {
+
+  input,
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
 }
 
 .card {
@@ -70,6 +99,18 @@ body {
   text-transform: uppercase;
   letter-spacing: 0.02em;
   font-size: 0.85rem;
+  /* Minimum touch target for mobile */
+  min-height: 44px;
+  min-width: 44px;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+@media (max-width: 640px) {
+  .btn {
+    padding: 0.75rem 1.25rem;
+    font-size: 0.8rem;
+  }
 }
 
 .btn-primary {
