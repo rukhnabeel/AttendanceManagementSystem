@@ -44,34 +44,37 @@ const DashboardStats = ({ logs = [], staff = [] }) => {
     return (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Attendance Trend */}
-            <div className="card p-6 bg-white">
-                <h3 className="text-lg font-bold text-gray-800 mb-4">Weekly Attendance Trend</h3>
-                {/* Fixed height container for Recharts */}
-                <div style={{ width: '100%', height: 300 }}>
-                    <ResponsiveContainer width="100%" height={300}>
+            <div className="card p-6 bg-white dark:bg-gray-800">
+                <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-4">Weekly Attendance Trend</h3>
+                <div className="w-full h-[300px] min-h-[300px]">
+                    <ResponsiveContainer width="100%" height="100%">
                         <BarChart data={barData}>
-                            <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e5e7eb" />
                             <XAxis
                                 dataKey="name"
-                                tick={{ fill: '#6b7280', fontSize: 12 }}
+                                tick={{ fill: '#9ca3af', fontSize: 12 }}
+                                axisLine={false}
+                                tickLine={false}
                             />
                             <YAxis
-                                tick={{ fill: '#6b7280', fontSize: 12 }}
+                                tick={{ fill: '#9ca3af', fontSize: 12 }}
+                                axisLine={false}
+                                tickLine={false}
                             />
                             <Tooltip
-                                contentStyle={{ borderRadius: '4px', border: '1px solid #e5e7eb' }}
+                                contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+                                cursor={{ fill: '#f3f4f6' }}
                             />
-                            <Bar dataKey="Present" fill="#2563eb" barSize={30} />
+                            <Bar dataKey="Present" fill="#4f46e5" radius={[4, 4, 0, 0]} barSize={40} />
                         </BarChart>
                     </ResponsiveContainer>
                 </div>
             </div>
 
             {/* Today's Status */}
-            <div className="card p-6 bg-white">
-                <h3 className="text-lg font-bold text-gray-800 mb-4">Today's Punctuality</h3>
-                {/* Fixed height container for Recharts */}
-                <div style={{ width: '100%', height: 300, minHeight: 300, position: 'relative' }}>
+            <div className="card p-6 bg-white dark:bg-gray-800">
+                <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-4">Today's Punctuality</h3>
+                <div className="w-full h-[300px] min-h-[300px] relative">
                     <ResponsiveContainer width="100%" height="100%">
                         <PieChart>
                             <Pie
@@ -84,17 +87,17 @@ const DashboardStats = ({ logs = [], staff = [] }) => {
                                 dataKey="value"
                             >
                                 {pieData.map((entry, index) => (
-                                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} strokeWidth={0} />
                                 ))}
                             </Pie>
-                            <Tooltip contentStyle={{ borderRadius: '4px', border: '1px solid #e5e7eb' }} />
-                            <Legend verticalAlign="bottom" height={36} />
+                            <Tooltip contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }} />
+                            <Legend verticalAlign="bottom" height={36} iconType="circle" />
                         </PieChart>
                     </ResponsiveContainer>
 
                     {/* Centered Stats Overlay */}
                     <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none pb-8">
-                        <span className="text-4xl font-black text-gray-800">{onTimeCount + lateCount}</span>
+                        <span className="text-4xl font-black text-gray-800 dark:text-white">{onTimeCount + lateCount}</span>
                         <span className="text-xs font-bold text-gray-400 uppercase tracking-widest mt-1">Total</span>
                     </div>
                 </div>

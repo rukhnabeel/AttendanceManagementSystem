@@ -81,7 +81,9 @@ const Admin = () => {
 
     useEffect(() => {
         const socket = io('/', {
-            transports: ['websocket', 'polling']
+            transports: ['polling'], // WebSocket fails on serverless/Vercel, use polling
+            reconnectionAttempts: 5,
+            reconnectionDelay: 1000
         });
         socket.on('connect', () => setSocketConnected(true));
         socket.on('disconnect', () => setSocketConnected(false));
