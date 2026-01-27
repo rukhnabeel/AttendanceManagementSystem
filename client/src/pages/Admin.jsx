@@ -43,10 +43,7 @@ const Admin = () => {
         }
     }, [navigate]);
 
-    const handleLogout = () => {
-        localStorage.removeItem('isAdminAuthenticated');
-        navigate('/login');
-    };
+
     const [staff, setStaff] = useState([]);
     const [logs, setLogs] = useState([]);
     const [leaves, setLeaves] = useState([]);
@@ -232,16 +229,16 @@ const Admin = () => {
                 <div>
                     <h1 className="text-4xl font-black text-black dark:text-white tracking-tight">Admin <span className="text-gradient">Console</span></h1>
                     <div className="flex items-center gap-3 mt-2">
-                        <div className={`flex items-center gap-2 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${socketConnected ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' : 'bg-gray-200 text-gray-700'}`}>
-                            <div className={`h-1.5 w-1.5 rounded-full ${socketConnected ? 'bg-green-500 animate-pulse' : 'bg-gray-500'}`} />
-                            {socketConnected ? 'Live Connection Active' : 'Offline Mode'}
-                        </div>
                         <button
-                            onClick={loadSampleData}
-                            className="flex items-center gap-1.5 px-3 py-1 bg-indigo-100 dark:bg-indigo-900/20 rounded-full text-[10px] font-black uppercase tracking-widest text-indigo-700 dark:text-indigo-400 hover:bg-indigo-200 transition-colors"
+                            onClick={() => {
+                                setIsEditing(false);
+                                setNewStaff(initialStaffState);
+                                setShowStaffModal(true);
+                            }}
+                            className="flex items-center gap-2 px-5 py-2.5 bg-indigo-600 text-white rounded-xl font-bold uppercase tracking-widest text-[10px] hover:bg-indigo-700 shadow-lg shadow-indigo-200 dark:shadow-none transition-all"
                         >
-                            <Zap size={10} className="fill-indigo-700 dark:fill-indigo-400" />
-                            Load Sample Data
+                            <UserPlus size={16} />
+                            Register Staff
                         </button>
                     </div>
                 </div>
@@ -261,24 +258,7 @@ const Admin = () => {
                         <QrCode size={20} />
                         <span className="hidden sm:inline">Office QR</span>
                     </button>
-                    <button
-                        onClick={handleLogout}
-                        className="btn bg-red-50 text-red-600 dark:bg-red-900/20 dark:text-red-400 border-2 border-red-100 dark:border-transparent hover:border-red-500 rounded-2xl"
-                    >
-                        <LogOut size={18} />
-                        Logout
-                    </button>
-                    <button
-                        onClick={() => {
-                            setIsEditing(false);
-                            setNewStaff(initialStaffState);
-                            setShowStaffModal(true);
-                        }}
-                        className="btn btn-primary"
-                    >
-                        <UserPlus size={18} />
-                        Register Staff
-                    </button>
+
                 </div>
             </div>
 
