@@ -9,6 +9,7 @@ import {
     CheckCircle,
     AlertCircle,
     LogOut,
+    LogIn,
     Camera,
     X,
     Calendar as CalendarIcon
@@ -232,6 +233,7 @@ const Home = () => {
                                                 onClick={() => setPunchType('In')}
                                                 className={`py-6 rounded-2xl font-black flex flex-col items-center gap-2 border-2 transition-all ${punchType === 'In' ? 'bg-indigo-600 border-indigo-600 text-white shadow-lg scale-[1.02]' : 'bg-gray-50 dark:bg-gray-900 border-transparent text-gray-400 hover:border-gray-200'}`}
                                             >
+                                                <LogIn size={22} />
                                                 <div className="flex flex-col items-center">
                                                     <span className="text-[9px] uppercase tracking-widest opacity-60">Arrival</span>
                                                     <span className="text-sm">PUNCH IN</span>
@@ -241,6 +243,7 @@ const Home = () => {
                                                 onClick={() => setPunchType('Out')}
                                                 className={`py-6 rounded-2xl font-black flex flex-col items-center gap-2 border-2 transition-all ${punchType === 'Out' ? 'bg-orange-500 border-orange-500 text-white shadow-lg scale-[1.02]' : 'bg-gray-50 dark:bg-gray-900 border-transparent text-gray-400 hover:border-gray-200'}`}
                                             >
+                                                <LogOut size={22} />
                                                 <div className="flex flex-col items-center">
                                                     <span className="text-[9px] uppercase tracking-widest opacity-60">Departure</span>
                                                     <span className="text-sm">PUNCH OUT</span>
