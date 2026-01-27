@@ -158,24 +158,39 @@ const Home = () => {
     return (
         <div className="animate-fade py-2 md:py-6 relative">
 
-            {/* Logout Button */}
-            <button
-                onClick={handleLogout}
-                className="absolute top-4 right-4 flex items-center gap-2 px-4 py-2 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-xl text-xs font-black uppercase tracking-widest hover:bg-red-100 transition-colors"
-            >
-                <LogOut size={14} />
-                Logout
-            </button>
+            {/* Top Navigation Bar */}
+            <div className="flex justify-between items-center px-4 mb-4">
+                <div className="flex items-center gap-2">
+                    {/* Placeholder for Logo or existing branding if needed, or left empty */}
+                </div>
+                <button
+                    onClick={handleLogout}
+                    className="flex items-center gap-2 px-3 py-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-sm rounded-xl text-[10px] font-black uppercase tracking-widest text-red-500 hover:bg-red-50 transition-colors"
+                >
+                    <LogOut size={14} />
+                    Logout
+                </button>
+            </div>
 
-            <header className="flex flex-col items-center justify-center py-6 text-center mb-4">
+            <header className="flex flex-col items-center justify-center py-2 text-center mb-6">
                 <DigitalClock />
-                <div className="mt-6">
+                <div className="mt-4">
                     <h1 className="text-2xl font-extrabold tracking-tight text-gray-900 dark:text-white sm:text-5xl">
                         Welcome, <span className="text-gradient">{staffUser.name}</span>
                     </h1>
-                    <p className="mt-4 text-[11px] font-black text-indigo-500/60 dark:text-indigo-400/50 uppercase tracking-[0.3em] max-w-2xl mx-auto">
-                        Ready to mark your attendance?
-                    </p>
+
+                    {/* Steps Indicator */}
+                    <div className="flex items-center justify-center gap-2 mt-4">
+                        <div className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest flex items-center gap-2 ${step === 1 ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-200' : 'bg-gray-100 text-gray-400'}`}>
+                            <div className="w-4 h-4 rounded-full bg-white text-indigo-600 flex items-center justify-center text-[8px]">1</div>
+                            Verify
+                        </div>
+                        <div className="w-8 h-0.5 bg-gray-200 dark:bg-gray-700" />
+                        <div className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest flex items-center gap-2 ${step === 2 ? 'bg-green-500 text-white shadow-lg shadow-green-200' : 'bg-gray-100 text-gray-400'}`}>
+                            <div className="w-4 h-4 rounded-full bg-white text-green-500 flex items-center justify-center text-[8px]">2</div>
+                            Done
+                        </div>
+                    </div>
                 </div>
             </header>
 
