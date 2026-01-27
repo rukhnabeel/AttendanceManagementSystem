@@ -643,7 +643,7 @@ const Admin = () => {
                                 <p className="text-xs font-bold text-gray-600 break-all bg-white px-3 py-2 rounded-lg border border-gray-100">{showSystemQR.url}</p>
                             </div>
                             <div className="grid grid-cols-2 gap-4 w-full">
-                                <button onClick={() => window.print()} className="btn btn-primary py-5 rounded-[22px] flex-1">
+                                <button onClick={() => setTimeout(() => window.print(), 100)} className="btn btn-primary py-5 rounded-[22px] flex-1">
                                     <Printer size={18} /> PRINT
                                 </button>
                                 <button onClick={() => setShowSystemQR(null)} className="py-5 px-6 rounded-[22px] font-black text-gray-400 uppercase tracking-widest text-[10px] hover:text-gray-900 transition-colors">
