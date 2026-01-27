@@ -42,8 +42,18 @@ const CameraOverlay = ({ onCapture, staffName }) => {
     };
 
     const handleUserMediaError = (error) => {
-        console.error('Camera error:', error);
-        setCameraError('Camera access denied. Please allow camera permissions in your browser settings.');
+        console.error('Camera error details:', error);
+
+        let msg = 'Camera access failed.';
+        if (error.name === 'NotAllowedError' || error.name === 'PermissionDeniedError') {
+            msg = 'Camera permission denied. Please allow access in browser settings.';
+        } else if (error.name === 'NotFoundError' || error.name === 'DevicesNotFoundError') {
+            msg = 'No camera device found. Please connect a camera.';
+        } else if (error.name === 'NotReadableError' || error.name === 'TrackStartError') {
+            msg = 'Camera is in use by another application.';
+        }
+
+        setCameraError(msg);
     };
 
     // Responsive video constraints based on device

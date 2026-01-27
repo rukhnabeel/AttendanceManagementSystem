@@ -46,7 +46,8 @@ const DashboardStats = ({ logs = [], staff = [] }) => {
             {/* Attendance Trend */}
             <div className="card p-6 bg-white">
                 <h3 className="text-lg font-bold text-gray-800 mb-4">Weekly Attendance Trend</h3>
-                <div className="h-64 min-h-[250px] w-full">
+                {/* Fixed height container for Recharts */}
+                <div style={{ width: '100%', height: 300, minHeight: 300 }}>
                     <ResponsiveContainer width="100%" height="100%">
                         <BarChart data={barData}>
                             <CartesianGrid strokeDasharray="3 3" vertical={false} />
@@ -69,15 +70,16 @@ const DashboardStats = ({ logs = [], staff = [] }) => {
             {/* Today's Status */}
             <div className="card p-6 bg-white">
                 <h3 className="text-lg font-bold text-gray-800 mb-4">Today's Punctuality</h3>
-                <div className="h-64 min-h-[250px] w-full flex items-center justify-center relative">
+                {/* Fixed height container for Recharts */}
+                <div style={{ width: '100%', height: 300, minHeight: 300, position: 'relative' }}>
                     <ResponsiveContainer width="100%" height="100%">
                         <PieChart>
                             <Pie
                                 data={pieData}
                                 cx="50%"
                                 cy="50%"
-                                innerRadius={60}
-                                outerRadius={80}
+                                innerRadius={80}
+                                outerRadius={100}
                                 paddingAngle={5}
                                 dataKey="value"
                             >
@@ -89,13 +91,12 @@ const DashboardStats = ({ logs = [], staff = [] }) => {
                             <Legend verticalAlign="bottom" height={36} />
                         </PieChart>
                     </ResponsiveContainer>
-                    {/* Only show "Entries" overlay if there IS data, to avoid awkward overlap in emptiness */}
-                    {(onTimeCount + lateCount > 0) && (
-                        <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none mt-4">
-                            <span className="text-2xl font-bold text-gray-800">{onTimeCount + lateCount}</span>
-                            <span className="text-[10px] font-bold text-gray-400 uppercase">Entries</span>
-                        </div>
-                    )}
+
+                    {/* Centered Stats Overlay */}
+                    <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none pb-8">
+                        <span className="text-4xl font-black text-gray-800">{onTimeCount + lateCount}</span>
+                        <span className="text-xs font-bold text-gray-400 uppercase tracking-widest mt-1">Total</span>
+                    </div>
                 </div>
             </div>
         </div>
