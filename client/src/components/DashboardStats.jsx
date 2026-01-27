@@ -47,8 +47,8 @@ const DashboardStats = ({ logs = [], staff = [] }) => {
             <div className="card p-6 bg-white">
                 <h3 className="text-lg font-bold text-gray-800 mb-4">Weekly Attendance Trend</h3>
                 {/* Fixed height container for Recharts */}
-                <div style={{ width: '100%', height: 300, minHeight: 300 }}>
-                    <ResponsiveContainer width="100%" height="100%">
+                <div style={{ width: '100%', height: 300 }}>
+                    <ResponsiveContainer width="100%" height={300}>
                         <BarChart data={barData}>
                             <CartesianGrid strokeDasharray="3 3" vertical={false} />
                             <XAxis
