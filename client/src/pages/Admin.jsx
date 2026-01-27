@@ -228,17 +228,17 @@ const Admin = () => {
         <div className="max-w-6xl mx-auto px-4 py-8 space-y-10 animate-fade">
             <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
                 <div>
-                    <h1 className="text-4xl font-black text-gray-900 dark:text-white tracking-tight">Admin <span className="text-gradient">Console</span></h1>
+                    <h1 className="text-4xl font-black text-black dark:text-white tracking-tight">Admin <span className="text-gradient">Console</span></h1>
                     <div className="flex items-center gap-3 mt-2">
-                        <div className={`flex items-center gap-2 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${socketConnected ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' : 'bg-gray-100 text-gray-500'}`}>
-                            <div className={`h-1.5 w-1.5 rounded-full ${socketConnected ? 'bg-green-500 animate-pulse' : 'bg-gray-400'}`} />
+                        <div className={`flex items-center gap-2 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${socketConnected ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' : 'bg-gray-200 text-gray-700'}`}>
+                            <div className={`h-1.5 w-1.5 rounded-full ${socketConnected ? 'bg-green-500 animate-pulse' : 'bg-gray-500'}`} />
                             {socketConnected ? 'Live Connection Active' : 'Offline Mode'}
                         </div>
                         <button
                             onClick={loadSampleData}
-                            className="flex items-center gap-1.5 px-3 py-1 bg-indigo-50 dark:bg-indigo-900/20 rounded-full text-[10px] font-black uppercase tracking-widest text-indigo-600 dark:text-indigo-400 hover:bg-indigo-100 transition-colors"
+                            className="flex items-center gap-1.5 px-3 py-1 bg-indigo-100 dark:bg-indigo-900/20 rounded-full text-[10px] font-black uppercase tracking-widest text-indigo-700 dark:text-indigo-400 hover:bg-indigo-200 transition-colors"
                         >
-                            <Zap size={10} className="fill-indigo-600" />
+                            <Zap size={10} className="fill-indigo-700 dark:fill-indigo-400" />
                             Load Sample Data
                         </button>
                     </div>
@@ -246,22 +246,22 @@ const Admin = () => {
 
                 <div className="flex flex-wrap items-center gap-3">
                     <div className="relative group">
-                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
                         <input
                             type="text"
                             placeholder="Search personnel..."
-                            className="pl-11 pr-6 py-3 bg-white dark:bg-gray-800 border-2 border-transparent rounded-2xl focus:border-indigo-500 shadow-sm outline-none w-full md:w-72 text-sm font-bold transition-all"
+                            className="pl-11 pr-6 py-3 bg-white dark:bg-gray-800 border-2 border-gray-100 dark:border-gray-700 rounded-2xl focus:border-indigo-500 shadow-sm outline-none w-full md:w-72 text-sm font-bold transition-all text-gray-900 dark:text-white placeholder-gray-400"
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                         />
                     </div>
-                    <button onClick={fetchSystemQR} className="btn bg-white dark:bg-gray-800 border-2 border-gray-100 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:border-indigo-500 hover:text-indigo-600 shadow-sm rounded-2xl" title="Office QR">
+                    <button onClick={fetchSystemQR} className="btn bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:border-indigo-500 hover:text-indigo-600 shadow-sm rounded-2xl" title="Office QR">
                         <QrCode size={20} />
                         <span className="hidden sm:inline">Office QR</span>
                     </button>
                     <button
                         onClick={handleLogout}
-                        className="btn bg-red-100 text-red-600 dark:bg-red-900/20 dark:text-red-400 border-2 border-transparent hover:border-red-500 rounded-2xl"
+                        className="btn bg-red-50 text-red-600 dark:bg-red-900/20 dark:text-red-400 border-2 border-red-100 dark:border-transparent hover:border-red-500 rounded-2xl"
                     >
                         <LogOut size={18} />
                         Logout
@@ -292,7 +292,7 @@ const Admin = () => {
                             <stat.icon size={24} />
                         </div>
                         <div>
-                            <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">{stat.label}</p>
+                            <p className="text-[10px] font-black text-gray-500 uppercase tracking-[0.2em]">{stat.label}</p>
                             <p className="text-3xl font-black text-gray-900 dark:text-white mt-1">{stat.value}</p>
                         </div>
                     </div>
@@ -309,7 +309,7 @@ const Admin = () => {
                     <button
                         key={tab.id}
                         onClick={() => setActiveTab(tab.id)}
-                        className={`md:flex-1 py-4 px-6 rounded-xl text-sm font-black uppercase tracking-widest flex items-center justify-center gap-3 transition-all ${activeTab === tab.id ? 'bg-indigo-600 text-white shadow-xl shadow-indigo-600/20' : 'text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-900 group'}`}
+                        className={`md:flex-1 py-4 px-6 rounded-xl text-sm font-black uppercase tracking-widest flex items-center justify-center gap-3 transition-all ${activeTab === tab.id ? 'bg-indigo-600 text-white shadow-xl shadow-indigo-600/20' : 'text-gray-500 hover:bg-gray-50 dark:hover:bg-gray-900 group'}`}
                     >
                         <tab.icon size={18} className={activeTab === tab.id ? '' : 'group-hover:text-indigo-500'} />
                         {tab.label}
@@ -333,12 +333,12 @@ const Admin = () => {
                                     <table className="w-full text-left text-sm whitespace-nowrap">
                                         <thead>
                                             <tr className="bg-gray-50 dark:bg-gray-900 border-b border-gray-100 dark:border-gray-700">
-                                                <th className="px-6 py-5 font-black uppercase tracking-widest text-[10px] text-gray-400">Employee Details</th>
-                                                <th className="px-6 py-5 font-black uppercase tracking-widest text-[10px] text-gray-400">Staff ID</th>
-                                                <th className="px-6 py-5 font-black uppercase tracking-widest text-[10px] text-gray-400">Role & Dept</th>
-                                                <th className="px-6 py-5 font-black uppercase tracking-widest text-[10px] text-gray-400">Timing</th>
-                                                <th className="px-4 py-5 font-black uppercase tracking-widest text-[10px] text-gray-400">Status</th>
-                                                <th className="px-6 py-5 font-black uppercase tracking-widest text-[10px] text-gray-400 text-right">Actions</th>
+                                                <th className="px-6 py-5 font-black uppercase tracking-widest text-[10px] text-gray-500">Employee Details</th>
+                                                <th className="px-6 py-5 font-black uppercase tracking-widest text-[10px] text-gray-500">Staff ID</th>
+                                                <th className="px-6 py-5 font-black uppercase tracking-widest text-[10px] text-gray-500">Role & Dept</th>
+                                                <th className="px-6 py-5 font-black uppercase tracking-widest text-[10px] text-gray-500">Timing</th>
+                                                <th className="px-4 py-5 font-black uppercase tracking-widest text-[10px] text-gray-500">Status</th>
+                                                <th className="px-6 py-5 font-black uppercase tracking-widest text-[10px] text-gray-500 text-right">Actions</th>
                                             </tr>
                                         </thead>
                                         <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
@@ -346,17 +346,17 @@ const Admin = () => {
                                                 <tr key={s._id} className="hover:bg-gray-50/50 dark:hover:bg-gray-700/30 group transition-colors">
                                                     <td className="px-6 py-5">
                                                         <div className="flex items-center gap-4">
-                                                            <div className="h-10 w-10 rounded-xl bg-gray-100 dark:bg-gray-700 flex items-center justify-center font-black text-gray-400 group-hover:bg-indigo-600 group-hover:text-white transition-all shadow-sm">{s.name.charAt(0)}</div>
+                                                            <div className="h-10 w-10 rounded-xl bg-gray-100 dark:bg-gray-700 flex items-center justify-center font-black text-gray-500 group-hover:bg-indigo-600 group-hover:text-white transition-all shadow-sm">{s.name.charAt(0)}</div>
                                                             <div>
                                                                 <div className="font-bold text-gray-900 dark:text-white">{s.name}</div>
-                                                                <div className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">{s.email || 'No Email'}</div>
+                                                                <div className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">{s.email || 'No Email'}</div>
                                                             </div>
                                                         </div>
                                                     </td>
                                                     <td className="px-6 py-5 font-black text-indigo-600 dark:text-indigo-400 tracking-tighter text-base">#{s.staffId}</td>
                                                     <td className="px-6 py-5">
-                                                        <div className="font-bold text-gray-700 dark:text-gray-300">{s.designation}</div>
-                                                        <div className="text-[10px] text-gray-400 uppercase font-black tracking-widest">{s.department}</div>
+                                                        <div className="font-bold text-gray-900 dark:text-gray-200">{s.designation}</div>
+                                                        <div className="text-[10px] text-gray-500 uppercase font-black tracking-widest">{s.department}</div>
                                                     </td>
                                                     <td className="px-6 py-5">
                                                         <span className="px-3 py-1 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg text-[10px] font-black uppercase tracking-widest">{s.shift}</span>
@@ -411,12 +411,12 @@ const Admin = () => {
                                     <table className="w-full text-left text-sm whitespace-nowrap">
                                         <thead>
                                             <tr className="bg-gray-50 dark:bg-gray-900 border-b border-gray-100 dark:border-gray-700">
-                                                <th className="px-6 py-5 font-black uppercase tracking-widest text-[10px] text-gray-400">Personnel</th>
-                                                <th className="px-6 py-5 font-black uppercase tracking-widest text-[10px] text-gray-400 text-center">Verification</th>
-                                                <th className="px-6 py-5 font-black uppercase tracking-widest text-[10px] text-gray-400">Timeline</th>
-                                                <th className="px-6 py-5 font-black uppercase tracking-widest text-[10px] text-gray-400">Type</th>
-                                                <th className="px-6 py-5 font-black uppercase tracking-widest text-[10px] text-gray-400">Result</th>
-                                                <th className="px-6 py-5 font-black uppercase tracking-widest text-[10px] text-gray-400 text-center">Source</th>
+                                                <th className="px-6 py-5 font-black uppercase tracking-widest text-[10px] text-gray-500">Personnel</th>
+                                                <th className="px-6 py-5 font-black uppercase tracking-widest text-[10px] text-gray-500 text-center">Verification</th>
+                                                <th className="px-6 py-5 font-black uppercase tracking-widest text-[10px] text-gray-500">Timeline</th>
+                                                <th className="px-6 py-5 font-black uppercase tracking-widest text-[10px] text-gray-500">Type</th>
+                                                <th className="px-6 py-5 font-black uppercase tracking-widest text-[10px] text-gray-500">Result</th>
+                                                <th className="px-6 py-5 font-black uppercase tracking-widest text-[10px] text-gray-500 text-center">Source</th>
                                             </tr>
                                         </thead>
                                         <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
@@ -429,8 +429,8 @@ const Admin = () => {
                                                         </button>
                                                     </td>
                                                     <td className="px-6 py-5">
-                                                        <div className="font-bold text-gray-800 dark:text-gray-200">{log.time}</div>
-                                                        <div className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">{log.date}</div>
+                                                        <div className="font-bold text-gray-900 dark:text-gray-200">{log.time}</div>
+                                                        <div className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">{log.date}</div>
                                                     </td>
                                                     <td className="px-6 py-5">
                                                         <div className={`flex items-center gap-2 font-black uppercase text-[10px] tracking-[0.2em] ${log.type === 'In' ? 'text-blue-600' : 'text-orange-600'}`}>
