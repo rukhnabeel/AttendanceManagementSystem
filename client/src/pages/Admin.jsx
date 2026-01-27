@@ -161,17 +161,23 @@ const Admin = () => {
             { staffId: 'TVH-117', name: 'MR ARJUN MEHTA', designation: 'OPERATION HEAD', department: 'General' }
         ];
 
-        try {
-            for (const s of samples) {
+        let successCount = 0;
+        let failCount = 0;
+
+        for (const s of samples) {
+            try {
                 await axios.post('/api/staff', { ...initialStaffState, ...s });
+                successCount++;
+            } catch (err) {
+                console.error(`Failed to load ${s.staffId}:`, err);
+                failCount++;
             }
-            fetchData();
-            alert('Successfully saved all details in server!');
-        } catch (err) {
-            console.error(err);
-            alert('Partial loading failed. Some records might exist.');
         }
+
+        fetchData();
         setLoading(false);
+        alert(`Process complete.\nSuccessfully loaded: ${successCount}\nFailed: ${failCount}\n${failCount > 0 ? 'Check console for details.' : ''}`);
+
     };
 
     const fetchSystemQR = async () => {
