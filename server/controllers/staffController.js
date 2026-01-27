@@ -24,10 +24,8 @@ exports.addStaff = async (req, res) => {
             emergencyContact, bloodGroup, dateOfBirth, status, salary
         } = req.body;
 
-        const isProduction = process.env.NODE_ENV === 'production';
-        const clientUrl = isProduction
-            ? 'https://attendance.tripvenzaholidays.com'
-            : `http://${process.env.CLIENT_HOST || getNetworkIp()}:5173`;
+        // ALWAYS use production domain as requested by user
+        const clientUrl = 'https://attendance.tripvenzaholidays.com';
 
         const qrData = `${clientUrl}/?staffId=${encodeURIComponent(staffId)}&name=${encodeURIComponent(name)}`;
         const qrCodeUrl = await QRCode.toDataURL(qrData);
@@ -87,10 +85,8 @@ exports.updateStaff = async (req, res) => {
             const idToUse = updates.staffId || currentStaff.staffId;
 
             if (nameToUse && idToUse) {
-                const isProduction = process.env.NODE_ENV === 'production';
-                const clientUrl = isProduction
-                    ? 'https://attendance.tripvenzaholidays.com'
-                    : `http://${process.env.CLIENT_HOST || getNetworkIp()}:5173`;
+                // ALWAYS use production domain as requested by user
+                const clientUrl = 'https://attendance.tripvenzaholidays.com';
 
                 const qrData = `${clientUrl}/?staffId=${encodeURIComponent(idToUse)}&name=${encodeURIComponent(nameToUse)}`;
                 updates.qrCode = await QRCode.toDataURL(qrData);
@@ -139,10 +135,8 @@ exports.deleteStaff = async (req, res) => {
 
 exports.getSystemQR = async (req, res) => {
     try {
-        const isProduction = process.env.NODE_ENV === 'production';
-        const clientUrl = isProduction
-            ? 'https://attendance.tripvenzaholidays.com'
-            : `http://${process.env.CLIENT_HOST || getNetworkIp()}:5173`;
+        // ALWAYS use production domain for Office QR as requested by user
+        const clientUrl = 'https://attendance.tripvenzaholidays.com';
 
         const qrData = `${clientUrl}/`;
 
