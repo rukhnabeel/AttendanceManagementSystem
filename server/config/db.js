@@ -7,29 +7,23 @@ const connectDB = async () => {
     try {
         console.log('Connecting to MongoDB...');
 
-        // If we have a URI, try to connect to it
+        // If we have a URI, we MUST connect to it. No fallbacks.
         if (process.env.MONGODB_URI) {
             const conn = await mongoose.connect(process.env.MONGODB_URI);
             console.log(`MongoDB Connected: ${conn.connection.host}`);
         } else {
-            console.log('No external MongoDB URI found. Starting In-Memory MongoDB...');
+            console.warn('WARNING: No MONGODB_URI found in .env file.');
+            console.log('Starting In-Memory MongoDB (Non-Persistent/Testing only)...');
             mongod = await MongoMemoryServer.create();
             const uri = mongod.getUri();
             const conn = await mongoose.connect(uri);
             console.log(`MongoDB Connected (In-Memory): ${conn.connection.host}`);
-            console.log('Note: Data will be cleared when the server restarts.');
         }
     } catch (error) {
-        console.error(`MongoDB Connection Error: ${error.message}`);
-        console.log('Attempting to use In-Memory MongoDB as fallback...');
-        try {
-            mongod = await MongoMemoryServer.create();
-            const uri = mongod.getUri();
-            await mongoose.connect(uri);
-            console.log('Fallback: Connected to In-Memory MongoDB');
-        } catch (fallbackError) {
-            console.error('Critical Error: Failed to connect to any database.');
-        }
+        console.error(`Error: ${error.message}`);
+        // Do NOT fallback if we had a URI but failed to connect. 
+        // We want to know if our production DB is down.
+        process.exit(1);
     }
 };
 
