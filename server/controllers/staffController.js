@@ -29,8 +29,11 @@ exports.addStaff = async (req, res) => {
         const qrData = `http://${serverIp}:${clientPort}/?staffId=${encodeURIComponent(staffId)}&name=${encodeURIComponent(name)}`;
         const qrCodeUrl = await QRCode.toDataURL(qrData);
 
-        // SYSTEMATIC FIX: Instead of throwing an error for duplicates, 
-        // we update the existing record. This handles "save new" while removing "duplicate" blockers.
+        // SYSTEMATIC FIX: Check for required fields explicitly
+        if (!staffId || !name || !designation) {
+            return res.status(400).json({ message: 'Missing required fields: Staff ID, Name, and Designation are mandatory.' });
+        }
+
         let staff = await Staff.findOneAndUpdate(
             { staffId },
             {
@@ -39,7 +42,13 @@ exports.addStaff = async (req, res) => {
                 emergencyContact, bloodGroup, dateOfBirth, status, salary,
                 qrCode: qrCodeUrl
             },
-            { new: true, upsert: true } // Create if not exists, update if exists
+            {
+                new: true,
+                upsert: true,
+                runValidators: true,
+                setDefaultsOnInsert: true,
+                context: 'query'
+            }
         );
 
         res.status(staff.isNew ? 201 : 200).json(staff);

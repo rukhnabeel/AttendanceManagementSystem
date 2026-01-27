@@ -46,7 +46,7 @@ const DashboardStats = ({ logs = [], staff = [] }) => {
             {/* Attendance Trend */}
             <div className="card p-6 bg-white">
                 <h3 className="text-lg font-bold text-gray-800 mb-4">Weekly Attendance Trend</h3>
-                <div className="h-64">
+                <div className="h-64 min-h-[250px] w-full">
                     <ResponsiveContainer width="100%" height="100%">
                         <BarChart data={barData}>
                             <CartesianGrid strokeDasharray="3 3" vertical={false} />
@@ -69,7 +69,7 @@ const DashboardStats = ({ logs = [], staff = [] }) => {
             {/* Today's Status */}
             <div className="card p-6 bg-white">
                 <h3 className="text-lg font-bold text-gray-800 mb-4">Today's Punctuality</h3>
-                <div className="h-64 flex items-center justify-center relative">
+                <div className="h-64 min-h-[250px] w-full flex items-center justify-center relative">
                     <ResponsiveContainer width="100%" height="100%">
                         <PieChart>
                             <Pie
@@ -89,10 +89,13 @@ const DashboardStats = ({ logs = [], staff = [] }) => {
                             <Legend verticalAlign="bottom" height={36} />
                         </PieChart>
                     </ResponsiveContainer>
-                    <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                        <span className="text-2xl font-bold text-gray-800">{onTimeCount + lateCount}</span>
-                        <span className="text-[10px] font-bold text-gray-400 uppercase">Entries</span>
-                    </div>
+                    {/* Only show "Entries" overlay if there IS data, to avoid awkward overlap in emptiness */}
+                    {(onTimeCount + lateCount > 0) && (
+                        <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none mt-4">
+                            <span className="text-2xl font-bold text-gray-800">{onTimeCount + lateCount}</span>
+                            <span className="text-[10px] font-bold text-gray-400 uppercase">Entries</span>
+                        </div>
+                    )}
                 </div>
             </div>
         </div>

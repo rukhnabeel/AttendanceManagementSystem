@@ -128,7 +128,9 @@ const Admin = () => {
             setNewStaff(initialStaffState);
             fetchData();
         } catch (err) {
-            alert(err.response?.data?.message || 'Error saving staff');
+            console.error('Save Error Details:', err);
+            const errMsg = err.response?.data?.message || err.message || 'Error saving staff';
+            alert(`Failed: ${errMsg}`);
         }
     };
 
