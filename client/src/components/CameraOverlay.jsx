@@ -58,15 +58,15 @@ const CameraOverlay = ({ onCapture }) => {
 
     // Responsive video constraints based on device
     const videoConstraints = {
-        width: { ideal: isMobile ? 720 : 1280 },
-        height: { ideal: isMobile ? 1280 : 720 },
-        facingMode: isMobile ? { exact: "user" } : "user",
-        aspectRatio: isMobile ? 0.75 : 1.777
+        width: { ideal: isMobile ? 1000 : 1280 },
+        height: { ideal: isMobile ? 1000 : 720 },
+        facingMode: "user",
+        aspectRatio: isMobile ? 1 : 1.777
     };
 
     return (
         <div className="flex flex-col items-center w-full">
-            <div className="relative w-full aspect-video rounded-2xl overflow-hidden bg-gray-900 group">
+            <div className="relative w-full aspect-square md:aspect-video rounded-2xl overflow-hidden bg-gray-900 group">
                 {cameraError ? (
                     <div className="w-full h-full flex flex-col items-center justify-center bg-gray-900 text-white p-6 text-center">
                         <AlertCircle size={48} className="text-red-500 mb-4" />

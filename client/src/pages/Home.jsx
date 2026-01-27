@@ -170,7 +170,7 @@ const Home = () => {
             <header className="flex flex-col items-center justify-center py-6 text-center mb-4">
                 <DigitalClock />
                 <div className="mt-6">
-                    <h1 className="text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white sm:text-5xl">
+                    <h1 className="text-2xl font-extrabold tracking-tight text-gray-900 dark:text-white sm:text-5xl">
                         Welcome, <span className="text-gradient">{staffUser.name}</span>
                     </h1>
                     <p className="mt-4 text-[11px] font-black text-indigo-500/60 dark:text-indigo-400/50 uppercase tracking-[0.3em] max-w-2xl mx-auto">
@@ -185,7 +185,7 @@ const Home = () => {
 
                         {/* LEFT COLUMN: CAMERA DISPLAY */}
                         <div className="lg:col-span-7 flex flex-col h-full">
-                            <div className="card p-6 border-4 border-white dark:border-gray-700 flex flex-col justify-center">
+                            <div className="card p-3 md:p-6 border-4 border-white dark:border-gray-700 flex flex-col justify-center">
                                 <div className="mb-4 flex items-center justify-between">
                                     <h3 className="text-sm font-black text-gray-400 uppercase tracking-widest flex items-center gap-2">
                                         <Camera size={16} className="text-indigo-500" />
@@ -205,12 +205,12 @@ const Home = () => {
 
                         {/* RIGHT COLUMN: ACTION PANEL */}
                         <div className="lg:col-span-5 flex flex-col h-full">
-                            <div className="card p-8 flex flex-col h-full bg-white dark:bg-gray-800 border-t-8 border-t-indigo-600">
-                                <div className="flex items-center gap-3 mb-8">
-                                    <div className="p-2.5 bg-indigo-50 dark:bg-indigo-900/40 rounded-xl text-indigo-600">
+                            <div className="card p-4 md:p-8 flex flex-col h-full bg-white dark:bg-gray-800 border-t-8 border-t-indigo-600">
+                                <div className="flex items-center gap-3 mb-4 md:mb-8">
+                                    <div className="p-2.5 bg-indigo-50 dark:bg-indigo-900/40 rounded-xl text-indigo-600 hidden md:block">
                                         <IdCard size={22} />
                                     </div>
-                                    <h2 className="text-xl font-black text-gray-900 dark:text-white tracking-tight">Daily Log</h2>
+                                    <h2 className="text-lg md:text-xl font-black text-gray-900 dark:text-white tracking-tight">Daily Log</h2>
                                 </div>
 
                                 <div className="space-y-6 flex-grow">
@@ -231,17 +231,17 @@ const Home = () => {
                                         <div className="grid grid-cols-2 gap-4">
                                             <button
                                                 onClick={() => setPunchType('In')}
-                                                className={`py-6 rounded-2xl font-black flex flex-col items-center gap-2 border-2 transition-all ${punchType === 'In' ? 'bg-indigo-600 border-indigo-600 text-white shadow-lg scale-[1.02]' : 'bg-gray-50 dark:bg-gray-900 border-transparent text-gray-400 hover:border-gray-200'}`}
+                                                className={`py-4 md:py-6 rounded-2xl font-black flex flex-col items-center gap-2 border-2 transition-all ${punchType === 'In' ? 'bg-indigo-600 border-indigo-600 text-white shadow-lg scale-[1.02]' : 'bg-gray-50 dark:bg-gray-900 border-transparent text-gray-400 hover:border-gray-200'}`}
                                             >
-                                                <LogIn size={22} />
+                                                <LogIn size={20} className="md:w-6 md:h-6" />
                                                 <div className="flex flex-col items-center">
                                                     <span className="text-[9px] uppercase tracking-widest opacity-60">Arrival</span>
-                                                    <span className="text-sm">PUNCH IN</span>
+                                                    <span className="text-xs md:text-sm">PUNCH IN</span>
                                                 </div>
                                             </button>
                                             <button
                                                 onClick={() => setPunchType('Out')}
-                                                className={`py-6 rounded-2xl font-black flex flex-col items-center gap-2 border-2 transition-all ${punchType === 'Out' ? 'bg-orange-500 border-orange-500 text-white shadow-lg scale-[1.02]' : 'bg-gray-50 dark:bg-gray-900 border-transparent text-gray-400 hover:border-gray-200'}`}
+                                                className={`py-4 md:py-6 rounded-2xl font-black flex flex-col items-center gap-2 border-2 transition-all ${punchType === 'Out' ? 'bg-orange-500 border-orange-500 text-white shadow-lg scale-[1.02]' : 'bg-gray-50 dark:bg-gray-900 border-transparent text-gray-400 hover:border-gray-200'}`}
                                             >
                                                 <LogOut size={22} />
                                                 <div className="flex flex-col items-center">
