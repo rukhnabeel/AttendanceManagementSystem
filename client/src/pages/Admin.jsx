@@ -192,6 +192,17 @@ const Admin = () => {
     const handleLeaveAction = async (id, status) => {
         try {
             await axios.put(`/api/leaves/${id}/status`, { status });
+
+            // Find the leave request to get details for WhatsApp
+            const leaveRequest = leaves.find(l => l._id === id);
+            if (leaveRequest && leaveRequest.phone) {
+                const message = `Hello ${leaveRequest.staffName}, your leave request for ${leaveRequest.startDate} has been *${status.toUpperCase()}*.`;
+                const whatsappUrl = `https://wa.me/${leaveRequest.phone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(message)}`;
+                window.open(whatsappUrl, '_blank');
+            } else if (leaveRequest && !leaveRequest.phone) {
+                alert(`Leave updated, but cannot open WhatsApp: No phone number found for ${leaveRequest.staffName}`);
+            }
+
             fetchData();
         } catch {
             alert('Failed to update leave status');

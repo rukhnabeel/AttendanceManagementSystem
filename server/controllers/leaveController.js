@@ -42,7 +42,34 @@ exports.applyLeave = async (req, res) => {
 
 exports.getAllLeaves = async (req, res) => {
     try {
-        const leaves = await Leave.find().sort({ timestamp: -1 });
+        // Aggregate to join with Staff collection and get phone numbers
+        const leaves = await Leave.aggregate([
+            {
+                $lookup: {
+                    from: 'staffs', // Ensure matches your collection name (Mongoose usually pluralizes 'Staff' -> 'staffs')
+                    localField: 'staffId',
+                    foreignField: 'staffId',
+                    as: 'staffDetails'
+                }
+            },
+            {
+                $unwind: {
+                    path: '$staffDetails',
+                    preserveNullAndEmptyArrays: true
+                }
+            },
+            {
+                $addFields: {
+                    phone: '$staffDetails.phone'
+                }
+            },
+            {
+                $project: {
+                    staffDetails: 0 // Remove the full staff object to keep response clean
+                }
+            },
+            { $sort: { timestamp: -1 } }
+        ]);
         res.json(leaves);
     } catch (error) {
         res.status(500).json({ message: error.message });
