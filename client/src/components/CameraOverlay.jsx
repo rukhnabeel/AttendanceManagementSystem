@@ -141,7 +141,7 @@ const CameraOverlay = ({ onCapture }) => {
                         >
                             <CheckCircle2 className="h-4 w-4 md:h-5 md:w-5" />
                             <span className="hidden sm:inline">USE THIS PHOTO</span>
-                            <span className="sm:hidden">CONFIRM</span>
+                            <span className="sm:hidden">USE PHOTO</span>
                         </button>
                     </div>
                 )}

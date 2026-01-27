@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, UserCheck, ShieldCheck, Monitor } from 'lucide-react';
+import { LayoutDashboard, UserCheck, ShieldCheck, Monitor, LogOut } from 'lucide-react';
 
 const Navbar = ({ toggleDarkMode }) => {
     const location = useLocation();
@@ -45,11 +45,26 @@ const Navbar = ({ toggleDarkMode }) => {
                 </div>
 
                 {/* Status & Add-ons */}
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2 md:gap-4">
                     <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-green-50 dark:bg-green-900/20 rounded-full border border-green-100 dark:border-green-900/30">
                         <div className="h-2 w-2 bg-green-500 rounded-full animate-pulse" />
                         <span className="text-[10px] font-bold text-green-700 dark:text-green-400 uppercase tracking-wider">System Online</span>
                     </div>
+
+                    {location.pathname !== '/login' && (
+                        <button
+                            onClick={() => {
+                                localStorage.removeItem('staffToken');
+                                localStorage.removeItem('staffUser');
+                                localStorage.removeItem('isAdminAuthenticated');
+                                window.location.href = '/login';
+                            }}
+                            className="flex items-center gap-1.5 px-3 py-1.5 bg-red-50 dark:bg-red-900/10 border border-red-100 dark:border-red-900/30 rounded-lg text-red-600 dark:text-red-400 hover:bg-red-100 transition-colors"
+                        >
+                            <LogOut className="h-4 w-4" />
+                            <span className="text-[10px] font-black uppercase tracking-widest hidden sm:inline">Logout</span>
+                        </button>
+                    )}
 
                     <button
                         onClick={toggleDarkMode}
