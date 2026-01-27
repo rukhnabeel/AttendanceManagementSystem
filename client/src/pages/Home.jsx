@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+// import { useSearchParams } from 'react-router-dom';
 import axios from 'axios';
 import DigitalClock from '../components/DigitalClock';
 import CameraOverlay from '../components/CameraOverlay';
@@ -23,21 +23,21 @@ import {
 import FingerprintJS from '@fingerprintjs/fingerprintjs';
 
 const Home = () => {
-    const [searchParams] = useSearchParams();
+    // const [searchParams] = useSearchParams();
     const [formData, setFormData] = useState({ staffName: '', staffId: '' });
     const [staffList, setStaffList] = useState([]);
     const [step, setStep] = useState(1);
     const [capturedPhoto, setCapturedPhoto] = useState(null);
     const [loading, setLoading] = useState(false);
     const [attendanceStatus, setAttendanceStatus] = useState('Present');
-    const [message, setMessage] = useState('');
+    // const [message, setMessage] = useState('');
     const [error, setError] = useState('');
     const [punchType, setPunchType] = useState('In');
     const [showDropdown, setShowDropdown] = useState(false);
     const [searchFilter, setSearchFilter] = useState('');
 
     // PERMISSIONS STATE
-    const [userLocation, setUserLocation] = useState(null);
+    const [userLocation] = useState(null);
 
     // LEAVE MANAGEMENT STATE
     const [showLeaveModal, setShowLeaveModal] = useState(false);
@@ -163,13 +163,13 @@ const Home = () => {
 
             setAttendanceStatus(res.data.status);
             setStep(2);
-            setMessage(`Attendance recorded at ${res.data.time}.`);
+            // setMessage(`Attendance recorded at ${res.data.time}.`);
 
             setTimeout(() => {
                 setStep(1);
                 setFormData({ staffName: '', staffId: '' });
                 setCapturedPhoto(null);
-                setMessage('');
+                // setMessage('');
                 setAttendanceStatus('Present');
             }, 5000);
         } catch (err) {
@@ -402,13 +402,19 @@ const Home = () => {
                             <div className="space-y-4">
                                 <div className="space-y-1.5">
                                     <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Your Staff ID</label>
-                                    <input
+                                    <select
                                         required
-                                        className="input-field py-3"
-                                        placeholder="ST-101"
+                                        className="input-field py-3 cursor-pointer"
                                         value={leaveFormData.staffId}
                                         onChange={e => setLeaveFormData({ ...leaveFormData, staffId: e.target.value })}
-                                    />
+                                    >
+                                        <option value="">Select Staff Member</option>
+                                        {staffList.map((staff) => (
+                                            <option key={staff._id || staff.staffId} value={staff.staffId}>
+                                                {staff.name} ({staff.staffId})
+                                            </option>
+                                        ))}
+                                    </select>
                                 </div>
 
                                 <div className="space-y-1.5">

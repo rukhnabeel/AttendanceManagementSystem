@@ -5,7 +5,7 @@ import {
     Users,
     ClipboardList,
     Plus,
-    Download,
+
     Trash2,
     Edit2,
     QrCode,
@@ -13,7 +13,7 @@ import {
     UserCheck,
     Calendar,
     LayoutDashboard,
-    Layers,
+
     MapPin,
     AlertCircle,
     CheckCircle,
@@ -94,9 +94,7 @@ const Admin = () => {
         return () => socket.disconnect();
     }, []);
 
-    useEffect(() => {
-        fetchData();
-    }, []);
+
 
     const fetchData = async () => {
         setLoading(true);
@@ -114,6 +112,11 @@ const Admin = () => {
         }
         setLoading(false);
     };
+
+    useEffect(() => {
+        // eslint-disable-next-line
+        fetchData();
+    }, []);
 
     const handleSaveStaff = async (e) => {
         if (e) e.preventDefault();
@@ -175,7 +178,7 @@ const Admin = () => {
         try {
             const res = await axios.get('/api/staff/system-qr');
             setShowSystemQR(res.data);
-        } catch (err) {
+        } catch {
             alert('Failed to generate system QR');
         }
     };
@@ -184,7 +187,7 @@ const Admin = () => {
         try {
             await axios.put(`/api/leaves/${id}/status`, { status });
             fetchData();
-        } catch (err) {
+        } catch {
             alert('Failed to update leave status');
         }
     };

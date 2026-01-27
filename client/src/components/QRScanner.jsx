@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import { Html5QrcodeScanner } from 'html5-qrcode';
 import { QrCode, X } from 'lucide-react';
 
@@ -20,12 +20,12 @@ const QRScanner = ({ onScan, onClose }) => {
                     const data = JSON.parse(decodedText);
                     onScan(data);
                     scanner.clear();
-                } catch (e) {
+                } catch {
                     onScan({ staffId: decodedText });
                     scanner.clear();
                 }
             },
-            (error) => {
+            () => {
                 // ignore errors
             }
         );

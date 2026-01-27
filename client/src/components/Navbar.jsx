@@ -1,7 +1,7 @@
 import { Link, useLocation } from 'react-router-dom';
 import { LayoutDashboard, UserCheck, ShieldCheck, Monitor } from 'lucide-react';
 
-const Navbar = ({ darkMode, toggleDarkMode }) => {
+const Navbar = ({ toggleDarkMode }) => {
     const location = useLocation();
 
     const isActive = (path) => location.pathname === path;

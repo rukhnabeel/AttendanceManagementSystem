@@ -9,29 +9,28 @@ const PermissionsHandler = ({ onPermissionsGranted }) => {
 
     // Check existing permissions on mount
     useEffect(() => {
-        checkPermissions();
-    }, []);
+        const checkPermissions = async () => {
+            try {
+                // Check camera permission
+                if (navigator.permissions) {
+                    const cameraStatus = await navigator.permissions.query({ name: 'camera' });
+                    setCameraPermission(cameraStatus.state);
 
-    const checkPermissions = async () => {
-        try {
-            // Check camera permission
-            if (navigator.permissions) {
-                const cameraStatus = await navigator.permissions.query({ name: 'camera' });
-                setCameraPermission(cameraStatus.state);
+                    // Check location permission
+                    const locationStatus = await navigator.permissions.query({ name: 'geolocation' });
+                    setLocationPermission(locationStatus.state);
 
-                // Check location permission
-                const locationStatus = await navigator.permissions.query({ name: 'geolocation' });
-                setLocationPermission(locationStatus.state);
-
-                // If both granted, auto-proceed
-                if (cameraStatus.state === 'granted' && locationStatus.state === 'granted') {
-                    onPermissionsGranted?.();
+                    // If both granted, auto-proceed
+                    if (cameraStatus.state === 'granted' && locationStatus.state === 'granted') {
+                        onPermissionsGranted?.();
+                    }
                 }
+            } catch {
+                console.log('Permissions API not fully supported, will request directly');
             }
-        } catch (err) {
-            console.log('Permissions API not fully supported, will request directly');
-        }
-    };
+        };
+        checkPermissions();
+    }, [onPermissionsGranted]);
 
     const requestCameraPermission = async () => {
         setIsRequesting(true);
@@ -169,10 +168,10 @@ const PermissionsHandler = ({ onPermissionsGranted }) => {
                     <div className="space-y-3">
                         {/* Camera Permission */}
                         <div className={`p-4 rounded-2xl border-2 transition-all ${cameraPermission === 'granted'
-                                ? 'border-green-200 bg-green-50 dark:bg-green-900/20 dark:border-green-800'
-                                : cameraPermission === 'denied'
-                                    ? 'border-red-200 bg-red-50 dark:bg-red-900/20 dark:border-red-800'
-                                    : 'border-gray-200 bg-gray-50 dark:bg-gray-900 dark:border-gray-700'
+                            ? 'border-green-200 bg-green-50 dark:bg-green-900/20 dark:border-green-800'
+                            : cameraPermission === 'denied'
+                                ? 'border-red-200 bg-red-50 dark:bg-red-900/20 dark:border-red-800'
+                                : 'border-gray-200 bg-gray-50 dark:bg-gray-900 dark:border-gray-700'
                             }`}>
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-3">
@@ -193,10 +192,10 @@ const PermissionsHandler = ({ onPermissionsGranted }) => {
 
                         {/* Location Permission */}
                         <div className={`p-4 rounded-2xl border-2 transition-all ${locationPermission === 'granted'
-                                ? 'border-green-200 bg-green-50 dark:bg-green-900/20 dark:border-green-800'
-                                : locationPermission === 'denied'
-                                    ? 'border-red-200 bg-red-50 dark:bg-red-900/20 dark:border-red-800'
-                                    : 'border-gray-200 bg-gray-50 dark:bg-gray-900 dark:border-gray-700'
+                            ? 'border-green-200 bg-green-50 dark:bg-green-900/20 dark:border-green-800'
+                            : locationPermission === 'denied'
+                                ? 'border-red-200 bg-red-50 dark:bg-red-900/20 dark:border-red-800'
+                                : 'border-gray-200 bg-gray-50 dark:bg-gray-900 dark:border-gray-700'
                             }`}>
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-3">

@@ -2,7 +2,7 @@ import { useRef, useCallback, useState, useEffect } from 'react';
 import Webcam from 'react-webcam';
 import { Camera, RefreshCw, CheckCircle2, User, Scan, AlertCircle } from 'lucide-react';
 
-const CameraOverlay = ({ onCapture, staffName }) => {
+const CameraOverlay = ({ onCapture }) => {
     const webcamRef = useRef(null);
     const [capturedImg, setCapturedImg] = useState(null);
     const [cameraError, setCameraError] = useState(null);
@@ -27,7 +27,7 @@ const CameraOverlay = ({ onCapture, staffName }) => {
             } else {
                 setCameraError('Failed to capture image. Please try again.');
             }
-        } catch (error) {
+        } catch {
             setCameraError('Camera capture failed. Please check permissions.');
         }
     }, [webcamRef]);
