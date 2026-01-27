@@ -48,7 +48,7 @@ const Home = () => {
     useEffect(() => {
         const fetchStaff = async () => {
             try {
-                const res = await axios.get('http://localhost:5000/api/staff');
+                const res = await axios.get('/api/staff');
                 setStaffList(res.data);
             } catch (err) {
                 console.error('Error fetching staff list', err);
@@ -60,7 +60,7 @@ const Home = () => {
     const toggleDropdown = async () => {
         if (!showDropdown && staffList.length === 0) {
             try {
-                const res = await axios.get('http://localhost:5000/api/staff');
+                const res = await axios.get('/api/staff');
                 setStaffList(res.data);
             } catch (err) { console.error(err); }
         }
@@ -88,7 +88,7 @@ const Home = () => {
         e.preventDefault();
         setLoading(true);
         try {
-            await axios.post('http://localhost:5000/api/leaves/apply', leaveFormData);
+            await axios.post('/api/leaves/apply', leaveFormData);
             alert('Leave request submitted successfully!');
             setShowLeaveModal(false);
             setLeaveFormData({
@@ -123,7 +123,7 @@ const Home = () => {
             const result = await fp.get();
             const deviceHash = result.visitorId;
 
-            const res = await axios.post('http://localhost:5000/api/attendance', {
+            const res = await axios.post('/api/attendance', {
                 staffId: formData.staffId,
                 name: formData.staffName,
                 photo: capturedPhoto,

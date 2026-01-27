@@ -80,7 +80,7 @@ const Admin = () => {
     const [selectedMonth, setSelectedMonth] = useState(new Date().toISOString().slice(0, 7)); // YYYY-MM
 
     useEffect(() => {
-        const socket = io('http://localhost:5000', {
+        const socket = io('/', {
             transports: ['websocket', 'polling']
         });
         socket.on('connect', () => setSocketConnected(true));
@@ -102,9 +102,9 @@ const Admin = () => {
         setLoading(true);
         try {
             const [staffRes, logsRes, leavesRes] = await Promise.all([
-                axios.get('http://localhost:5000/api/staff'),
-                axios.get('http://localhost:5000/api/attendance'),
-                axios.get('http://localhost:5000/api/leaves')
+                axios.get('/api/staff'),
+                axios.get('/api/attendance'),
+                axios.get('/api/leaves')
             ]);
             setStaff(staffRes.data);
             setLogs(logsRes.data);
@@ -119,9 +119,9 @@ const Admin = () => {
         if (e) e.preventDefault();
         try {
             if (isEditing) {
-                await axios.put(`http://localhost:5000/api/staff/${newStaff._id}`, newStaff);
+                await axios.put(`/api/staff/${newStaff._id}`, newStaff);
             } else {
-                await axios.post('http://localhost:5000/api/staff', newStaff);
+                await axios.post('/api/staff', newStaff);
             }
             setShowStaffModal(false);
             setIsEditing(false);
@@ -158,7 +158,7 @@ const Admin = () => {
 
         try {
             for (const s of samples) {
-                await axios.post('http://localhost:5000/api/staff', { ...initialStaffState, ...s });
+                await axios.post('/api/staff', { ...initialStaffState, ...s });
             }
             fetchData();
             alert('Successfully saved all details in server!');
@@ -171,7 +171,7 @@ const Admin = () => {
 
     const fetchSystemQR = async () => {
         try {
-            const res = await axios.get('http://localhost:5000/api/staff/system-qr');
+            const res = await axios.get('/api/staff/system-qr');
             setShowSystemQR(res.data);
         } catch (err) {
             alert('Failed to generate system QR');
@@ -180,7 +180,7 @@ const Admin = () => {
 
     const handleLeaveAction = async (id, status) => {
         try {
-            await axios.put(`http://localhost:5000/api/leaves/${id}/status`, { status });
+            await axios.put(`/api/leaves/${id}/status`, { status });
             fetchData();
         } catch (err) {
             alert('Failed to update leave status');
@@ -190,7 +190,7 @@ const Admin = () => {
     const handleDeleteStaff = async (id) => {
         if (!window.confirm('Are you sure you want to remove this employee?')) return;
         try {
-            await axios.delete(`http://localhost:5000/api/staff/${id}`);
+            await axios.delete(`/api/staff/${id}`);
             fetchData();
         } catch (err) {
             console.error(err);
@@ -590,7 +590,7 @@ const Admin = () => {
                         <div className="absolute top-0 inset-x-0 h-2 bg-gradient-to-r from-indigo-500 to-purple-600" />
                         <h4 className="text-xs font-black text-indigo-500 uppercase tracking-[0.3em] mb-6">{viewItem.type} Verification</h4>
                         <div className="bg-gray-50 dark:bg-gray-900 rounded-[2rem] p-4 border-2 border-gray-100 dark:border-gray-700 shadow-inner mb-8">
-                            <img src={viewItem.src.startsWith('data:') ? viewItem.src : `http://localhost:5000/${viewItem.src}`} className="mx-auto rounded-2xl w-full object-contain" alt="Viewer" />
+                            <img src={viewItem.src.startsWith('data:') ? viewItem.src : `/${viewItem.src}`} className="mx-auto rounded-2xl w-full object-contain" alt="Viewer" />
                         </div>
                         <div className="mb-8">
                             <p className="font-bold text-gray-900 dark:text-white uppercase tracking-tighter text-xl">{viewItem.title}</p>
