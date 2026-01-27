@@ -3,7 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import axios from 'axios';
 import DigitalClock from '../components/DigitalClock';
 import CameraOverlay from '../components/CameraOverlay';
-import PermissionsHandler from '../components/PermissionsHandler';
+import CameraOverlay from '../components/CameraOverlay';
 import {
     IdCard,
     CheckCircle,
@@ -37,8 +37,6 @@ const Home = () => {
     const [searchFilter, setSearchFilter] = useState('');
 
     // PERMISSIONS STATE
-    const [showPermissions, setShowPermissions] = useState(true);
-    const [permissionsGranted, setPermissionsGranted] = useState(false);
     const [userLocation, setUserLocation] = useState(null);
 
     // LEAVE MANAGEMENT STATE
@@ -111,34 +109,7 @@ const Home = () => {
         setLoading(false);
     };
 
-    // Handle permissions granted
-    const handlePermissionsGranted = async () => {
-        setPermissionsGranted(true);
-        setShowPermissions(false);
 
-        // Get and store current location
-        try {
-            navigator.geolocation.getCurrentPosition(
-                (position) => {
-                    setUserLocation({
-                        latitude: position.coords.latitude,
-                        longitude: position.coords.longitude,
-                        accuracy: position.coords.accuracy
-                    });
-                },
-                (error) => {
-                    console.error('Location error:', error);
-                },
-                {
-                    enableHighAccuracy: true,
-                    timeout: 10000,
-                    maximumAge: 0
-                }
-            );
-        } catch (err) {
-            console.error('Failed to get location:', err);
-        }
-    };
 
     const handleSubmit = async (e) => {
         if (e) e.preventDefault();
@@ -210,10 +181,7 @@ const Home = () => {
 
     return (
         <div className="animate-fade py-2 md:py-6">
-            {/* Permissions Handler */}
-            {showPermissions && !permissionsGranted && (
-                <PermissionsHandler onPermissionsGranted={handlePermissionsGranted} />
-            )}
+
 
             <header className="flex flex-col items-center justify-center py-6 text-center mb-4">
                 <DigitalClock />
