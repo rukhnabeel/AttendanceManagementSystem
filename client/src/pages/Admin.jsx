@@ -106,9 +106,9 @@ const Admin = () => {
                 axios.get('/api/attendance'),
                 axios.get('/api/leaves')
             ]);
-            setStaff(staffRes.data);
-            setLogs(logsRes.data);
-            setLeaves(leavesRes.data);
+            setStaff(Array.isArray(staffRes.data) ? staffRes.data : []);
+            setLogs(Array.isArray(logsRes.data) ? logsRes.data : []);
+            setLeaves(Array.isArray(leavesRes.data) ? leavesRes.data : []);
         } catch (err) {
             console.error('Error fetching data', err);
         }
@@ -197,9 +197,9 @@ const Admin = () => {
         }
     };
 
-    const filteredStaff = staff.filter(s =>
-        s.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        s.staffId.toLowerCase().includes(searchTerm.toLowerCase())
+    const filteredStaff = (Array.isArray(staff) ? staff : []).filter(s =>
+        (s.name || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (s.staffId || '').toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     return (
@@ -260,10 +260,10 @@ const Admin = () => {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 {[
-                    { label: 'Personnel', value: staff.length, icon: Users, grad: 'from-blue-500 to-indigo-600' },
-                    { label: 'Present Today', value: logs.filter(l => l.date === new Date().toISOString().split('T')[0]).length, icon: UserCheck, grad: 'from-emerald-500 to-teal-600' },
-                    { label: 'Unpunctual', value: logs.filter(l => l.status === 'Late' && l.date === new Date().toISOString().split('T')[0]).length, icon: Clock, grad: 'from-orange-400 to-rose-500' },
-                    { label: 'Active Status', value: staff.filter(s => s.status === 'Active').length, icon: ShieldCheck, grad: 'from-purple-500 to-pink-600' }
+                    { label: 'Personnel', value: (Array.isArray(staff) ? staff : []).length, icon: Users, grad: 'from-blue-500 to-indigo-600' },
+                    { label: 'Present Today', value: (Array.isArray(logs) ? logs : []).filter(l => l.date === new Date().toISOString().split('T')[0]).length, icon: UserCheck, grad: 'from-emerald-500 to-teal-600' },
+                    { label: 'Unpunctual', value: (Array.isArray(logs) ? logs : []).filter(l => l.status === 'Late' && l.date === new Date().toISOString().split('T')[0]).length, icon: Clock, grad: 'from-orange-400 to-rose-500' },
+                    { label: 'Active Status', value: (Array.isArray(staff) ? staff : []).filter(s => s.status === 'Active').length, icon: ShieldCheck, grad: 'from-purple-500 to-pink-600' }
                 ].map((stat, i) => (
                     <div key={i} className="card p-6 flex flex-col gap-4 bg-white dark:bg-gray-800 group hover:scale-[1.02]">
                         <div className={`h-12 w-12 rounded-2xl bg-gradient-to-br ${stat.grad} flex items-center justify-center text-white shadow-lg`}>
@@ -303,7 +303,7 @@ const Admin = () => {
                     </div>
                 ) : (
                     <div className="animate-slide">
-                        {activeTab === 'overview' && <DashboardStats logs={logs} staff={staff} />}
+                        {activeTab === 'overview' && <DashboardStats logs={Array.isArray(logs) ? logs : []} staff={Array.isArray(staff) ? staff : []} />}
 
                         {activeTab === 'staff' && (
                             <div className="card overflow-hidden bg-white dark:bg-gray-800">
@@ -398,7 +398,7 @@ const Admin = () => {
                                             </tr>
                                         </thead>
                                         <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
-                                            {logs.filter(log => log.date.startsWith(selectedMonth)).length > 0 ? logs.filter(log => log.date.startsWith(selectedMonth)).map((log) => (
+                                            {(Array.isArray(logs) ? logs : []).filter(log => log.date && log.date.startsWith(selectedMonth)).length > 0 ? (Array.isArray(logs) ? logs : []).filter(log => log.date && log.date.startsWith(selectedMonth)).map((log) => (
                                                 <tr key={log._id} className="hover:bg-gray-50/50 dark:hover:bg-gray-700/30 transition-colors">
                                                     <td className="px-6 py-5 font-black text-gray-900 dark:text-white">{log.staffName}</td>
                                                     <td className="px-6 py-5 text-center">
@@ -461,7 +461,7 @@ const Admin = () => {
                                             </tr>
                                         </thead>
                                         <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
-                                            {leaves.length > 0 ? leaves.map((leave) => (
+                                            {(Array.isArray(leaves) ? leaves : []).length > 0 ? (Array.isArray(leaves) ? leaves : []).map((leave) => (
                                                 <tr key={leave._id} className="hover:bg-gray-50/50 dark:hover:bg-gray-700/30 transition-colors">
                                                     <td className="px-6 py-5">
                                                         <div className="font-bold text-gray-900 dark:text-white">{leave.staffName}</div>

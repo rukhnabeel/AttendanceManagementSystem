@@ -5,7 +5,13 @@ import {
 } from 'recharts';
 import { format, subDays, parseISO } from 'date-fns';
 
-const DashboardStats = ({ logs, staff }) => {
+const DashboardStats = ({ logs = [], staff = [] }) => {
+    // Safety check
+    if (!Array.isArray(logs)) {
+        console.warn('DashboardStats received non-array logs:', logs);
+        return null;
+    }
+
     // 1. Calculate On-Time vs Late (Today)
     const today = new Date().toISOString().split('T')[0];
     const todaysLogs = logs.filter(l => l.date === today && l.type === 'In');

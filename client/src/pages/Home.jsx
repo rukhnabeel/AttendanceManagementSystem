@@ -49,9 +49,10 @@ const Home = () => {
         const fetchStaff = async () => {
             try {
                 const res = await axios.get('/api/staff');
-                setStaffList(res.data);
+                setStaffList(Array.isArray(res.data) ? res.data : []);
             } catch (err) {
                 console.error('Error fetching staff list', err);
+                setStaffList([]);
             }
         };
         fetchStaff();
@@ -61,7 +62,7 @@ const Home = () => {
         if (!showDropdown && staffList.length === 0) {
             try {
                 const res = await axios.get('/api/staff');
-                setStaffList(res.data);
+                setStaffList(Array.isArray(res.data) ? res.data : []);
             } catch (err) { console.error(err); }
         }
         setShowDropdown(!showDropdown);
@@ -74,9 +75,9 @@ const Home = () => {
         setError('');
     };
 
-    const filteredStaff = staffList.filter(s =>
-        s.name.toLowerCase().includes(searchFilter.toLowerCase()) ||
-        s.staffId.toLowerCase().includes(searchFilter.toLowerCase())
+    const filteredStaff = (Array.isArray(staffList) ? staffList : []).filter(s =>
+        (s.name || '').toLowerCase().includes(searchFilter.toLowerCase()) ||
+        (s.staffId || '').toLowerCase().includes(searchFilter.toLowerCase())
     );
 
     const handleCapture = (photo) => {
