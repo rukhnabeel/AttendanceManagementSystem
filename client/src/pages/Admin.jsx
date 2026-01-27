@@ -26,7 +26,8 @@ import {
     LogIn,
     LogOut,
     Database,
-    Zap
+    Zap,
+    FileSpreadsheet
 } from 'lucide-react';
 import { io } from 'socket.io-client';
 import DashboardStats from '../components/DashboardStats';
@@ -218,6 +219,10 @@ const Admin = () => {
         }
     };
 
+    const handleExport = () => {
+        window.open('/api/attendance/export', '_blank');
+    };
+
     const filteredStaff = (Array.isArray(staff) ? staff : []).filter(s =>
         (s.name || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
         (s.staffId || '').toLowerCase().includes(searchTerm.toLowerCase())
@@ -379,6 +384,14 @@ const Admin = () => {
                                         <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-1">Filtering by month cycle</p>
                                     </div>
                                     <div className="flex items-center gap-3">
+                                        <button
+                                            onClick={handleExport}
+                                            className="flex items-center gap-2 px-4 py-2 bg-green-50 text-green-700 hover:bg-green-100 border border-green-200 rounded-xl text-xs font-black uppercase tracking-widest transition-all"
+                                        >
+                                            <FileSpreadsheet size={16} />
+                                            Export CSV
+                                        </button>
+                                        <div className="h-8 w-[1px] bg-gray-200 dark:bg-gray-700 mx-2 hidden md:block"></div>
                                         <Calendar size={18} className="text-indigo-500" />
                                         <input
                                             type="month"
