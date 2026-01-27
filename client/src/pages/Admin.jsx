@@ -590,6 +590,10 @@ const Admin = () => {
                                     <label className="text-label">Phone Contact</label>
                                     <input type="tel" className="input-field" placeholder="+123..." value={newStaff.phone} onChange={e => setNewStaff({ ...newStaff, phone: e.target.value })} />
                                 </div>
+                                <div className="space-y-2">
+                                    <label className="text-label">Password</label>
+                                    <input type="text" className="input-field" placeholder={isEditing ? "Leave blank to keep current" : "Set Login Password"} value={newStaff.password || ''} onChange={e => setNewStaff({ ...newStaff, password: e.target.value })} />
+                                </div>
                             </div>
 
                             <div className="flex gap-4 pt-6 border-t dark:border-gray-700">

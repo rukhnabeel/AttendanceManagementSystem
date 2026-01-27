@@ -1,6 +1,7 @@
 const Staff = require('../models/Staff');
 const QRCode = require('qrcode');
 const os = require('os');
+const bcrypt = require('bcryptjs');
 
 // Helper to get local network IP
 const getNetworkIp = () => {
@@ -21,7 +22,8 @@ exports.addStaff = async (req, res) => {
         const {
             staffId, name, designation, department, email,
             phone, joiningDate, shift, gender, address,
-            emergencyContact, bloodGroup, dateOfBirth, status, salary
+            emergencyContact, bloodGroup, dateOfBirth, status, salary,
+            password
         } = req.body;
 
         // ALWAYS use production domain as requested by user
@@ -35,14 +37,22 @@ exports.addStaff = async (req, res) => {
             return res.status(400).json({ message: 'Missing required fields: Staff ID, Name, and Designation are mandatory.' });
         }
 
+        const updateData = {
+            staffId, name, designation, department, email,
+            phone, joiningDate, shift, gender, address,
+            emergencyContact, bloodGroup, dateOfBirth, status, salary,
+            qrCode: qrCodeUrl
+        };
+
+        // Hash password if provided
+        if (password) {
+            const salt = await bcrypt.genSalt(10);
+            updateData.password = await bcrypt.hash(password, salt);
+        }
+
         let staff = await Staff.findOneAndUpdate(
             { staffId },
-            {
-                staffId, name, designation, department, email,
-                phone, joiningDate, shift, gender, address,
-                emergencyContact, bloodGroup, dateOfBirth, status, salary,
-                qrCode: qrCodeUrl
-            },
+            updateData,
             {
                 new: true,
                 upsert: true,
@@ -91,6 +101,11 @@ exports.updateStaff = async (req, res) => {
                 const qrData = `${clientUrl}/?staffId=${encodeURIComponent(idToUse)}&name=${encodeURIComponent(nameToUse)}`;
                 updates.qrCode = await QRCode.toDataURL(qrData);
             }
+        }
+
+        if (updates.password) {
+            const salt = await bcrypt.genSalt(10);
+            updates.password = await bcrypt.hash(updates.password, salt);
         }
 
         const staff = await Staff.findByIdAndUpdate(id, updates, { new: true });

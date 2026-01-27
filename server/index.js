@@ -8,6 +8,7 @@ const connectDB = require('./config/db');
 const staffRoutes = require('./routes/staffRoutes');
 const attendanceRoutes = require('./routes/attendanceRoutes');
 const leaveRoutes = require('./routes/leaveRoutes');
+const authRoutes = require('./routes/authRoutes');
 
 const app = express();
 const server = http.createServer(app);
@@ -36,6 +37,7 @@ app.use((req, res, next) => {
 app.use('/api/staff', staffRoutes);
 app.use('/api/attendance', attendanceRoutes);
 app.use('/api/leaves', leaveRoutes);
+app.use('/api/auth', authRoutes);
 
 // Socket.io connection logic
 io.on('connection', (socket) => {

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-// import { useSearchParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import DigitalClock from '../components/DigitalClock';
 import CameraOverlay from '../components/CameraOverlay';
@@ -8,13 +8,7 @@ import {
     IdCard,
     CheckCircle,
     AlertCircle,
-    ChevronDown,
-    Users,
-    ArrowRight,
-    UserPlus,
-    LogIn,
     LogOut,
-    UserCheck,
     Camera,
     X,
     Calendar as CalendarIcon
@@ -23,18 +17,17 @@ import {
 import FingerprintJS from '@fingerprintjs/fingerprintjs';
 
 const Home = () => {
-    // const [searchParams] = useSearchParams();
+    const navigate = useNavigate();
+    const [staffUser, setStaffUser] = useState(null);
     const [formData, setFormData] = useState({ staffName: '', staffId: '' });
-    const [staffList, setStaffList] = useState([]);
+
+    // UI State
     const [step, setStep] = useState(1);
     const [capturedPhoto, setCapturedPhoto] = useState(null);
     const [loading, setLoading] = useState(false);
     const [attendanceStatus, setAttendanceStatus] = useState('Present');
-    // const [message, setMessage] = useState('');
     const [error, setError] = useState('');
     const [punchType, setPunchType] = useState('In');
-    const [showDropdown, setShowDropdown] = useState(false);
-    const [searchFilter, setSearchFilter] = useState('');
 
     // PERMISSIONS STATE
     const [userLocation] = useState(null);
@@ -50,39 +43,27 @@ const Home = () => {
     });
 
     useEffect(() => {
-        const fetchStaff = async () => {
-            try {
-                const res = await axios.get('/api/staff');
-                setStaffList(Array.isArray(res.data) ? res.data : []);
-            } catch (err) {
-                console.error('Error fetching staff list', err);
-                setStaffList([]);
-            }
-        };
-        fetchStaff();
-    }, []);
+        // Authenticate User
+        const token = localStorage.getItem('staffToken');
+        const userStr = localStorage.getItem('staffUser');
 
-    const toggleDropdown = async () => {
-        if (!showDropdown && staffList.length === 0) {
-            try {
-                const res = await axios.get('/api/staff');
-                setStaffList(Array.isArray(res.data) ? res.data : []);
-            } catch (err) { console.error(err); }
+        if (!token || !userStr) {
+            navigate('/login');
+            return;
         }
-        setShowDropdown(!showDropdown);
-    };
 
-    const handleSelectEmployee = (employee) => {
-        setFormData({ staffName: employee.name, staffId: employee.staffId });
-        setShowDropdown(false);
-        setSearchFilter('');
-        setError('');
-    };
+        const user = JSON.parse(userStr);
+        setStaffUser(user);
+        setFormData({ staffName: user.name, staffId: user.staffId });
+        setLeaveFormData(prev => ({ ...prev, staffId: user.staffId }));
 
-    const filteredStaff = (Array.isArray(staffList) ? staffList : []).filter(s =>
-        (s.name || '').toLowerCase().includes(searchFilter.toLowerCase()) ||
-        (s.staffId || '').toLowerCase().includes(searchFilter.toLowerCase())
-    );
+    }, [navigate]);
+
+    const handleLogout = () => {
+        localStorage.removeItem('staffToken');
+        localStorage.removeItem('staffUser');
+        navigate('/login');
+    };
 
     const handleCapture = (photo) => {
         setCapturedPhoto(photo);
@@ -93,11 +74,12 @@ const Home = () => {
         e.preventDefault();
         setLoading(true);
         try {
-            await axios.post('/api/leaves/apply', leaveFormData);
+            // Force staffId from logged in user
+            await axios.post('/api/leaves/apply', { ...leaveFormData, staffId: staffUser.staffId });
             alert('Leave request submitted successfully!');
             setShowLeaveModal(false);
             setLeaveFormData({
-                staffId: '',
+                staffId: staffUser.staffId,
                 leaveType: 'Casual Leave',
                 startDate: new Date().toISOString().split('T')[0],
                 endDate: new Date().toISOString().split('T')[0],
@@ -109,16 +91,11 @@ const Home = () => {
         setLoading(false);
     };
 
-
-
     const handleSubmit = async (e) => {
         if (e) e.preventDefault();
-        if (!formData.staffName || !formData.staffId) {
-            setError('Please identify yourself (Step 1)');
-            return;
-        }
+
         if (!capturedPhoto) {
-            setError('Please capture your photo (Step 2)');
+            setError('Please capture your photo (Step 1)');
             return;
         }
 
@@ -144,7 +121,6 @@ const Home = () => {
                     };
                 } catch (locErr) {
                     console.error('Location error:', locErr);
-                    // Continue without location if it fails
                 }
             }
 
@@ -163,13 +139,10 @@ const Home = () => {
 
             setAttendanceStatus(res.data.status);
             setStep(2);
-            // setMessage(`Attendance recorded at ${res.data.time}.`);
 
             setTimeout(() => {
                 setStep(1);
-                setFormData({ staffName: '', staffId: '' });
                 setCapturedPhoto(null);
-                // setMessage('');
                 setAttendanceStatus('Present');
             }, 5000);
         } catch (err) {
@@ -179,18 +152,28 @@ const Home = () => {
         }
     };
 
-    return (
-        <div className="animate-fade py-2 md:py-6">
+    if (!staffUser) return null; // Prevent flash of unauthorized content
 
+    return (
+        <div className="animate-fade py-2 md:py-6 relative">
+
+            {/* Logout Button */}
+            <button
+                onClick={handleLogout}
+                className="absolute top-4 right-4 flex items-center gap-2 px-4 py-2 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-xl text-xs font-black uppercase tracking-widest hover:bg-red-100 transition-colors"
+            >
+                <LogOut size={14} />
+                Logout
+            </button>
 
             <header className="flex flex-col items-center justify-center py-6 text-center mb-4">
                 <DigitalClock />
                 <div className="mt-6">
                     <h1 className="text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white sm:text-5xl">
-                        Work Attendance <span className="text-gradient">Portal</span>
+                        Welcome, <span className="text-gradient">{staffUser.name}</span>
                     </h1>
                     <p className="mt-4 text-[11px] font-black text-indigo-500/60 dark:text-indigo-400/50 uppercase tracking-[0.3em] max-w-2xl mx-auto">
-                        Quick, secure, and biometric-backed system for daily attendance records.
+                        Ready to mark your attendance?
                     </p>
                 </div>
             </header>
@@ -199,7 +182,7 @@ const Home = () => {
                 <div className="max-w-6xl mx-auto px-4">
                     <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-stretch">
 
-                        {/* LEFT COLUMN: CAMERA DISPLAY + STEPPER */}
+                        {/* LEFT COLUMN: CAMERA DISPLAY */}
                         <div className="lg:col-span-7 flex flex-col h-full">
                             <div className="card p-6 border-4 border-white dark:border-gray-700 flex flex-col justify-center">
                                 <div className="mb-4 flex items-center justify-between">
@@ -213,90 +196,32 @@ const Home = () => {
                                     </div>
                                 </div>
                                 <CameraOverlay
-                                    staffName={formData.staffName || 'Staff'}
+                                    staffName={formData.staffName}
                                     onCapture={handleCapture}
                                 />
                             </div>
-
-                            {/* STEPPER SHIFTED HERE (UNDER CAMERA) */}
-                            <div className="mt-8 flex flex-wrap justify-center gap-6 py-4 bg-white/30 dark:bg-gray-800/20 rounded-3xl border border-dashed border-gray-200 dark:border-gray-700">
-                                {[
-                                    { id: 1, label: 'Identity', icon: UserCheck, active: !!formData.staffId, activeBg: 'bg-[#0ea5e9]', activeText: 'text-[#0ea5e9]', activeBorder: 'border-[#0ea5e9]', inactiveBg: 'bg-sky-50/50' },
-                                    { id: 2, label: 'Capture', icon: Camera, active: !!capturedPhoto, activeBg: 'bg-[#f43f5e]', activeText: 'text-[#f43f5e]', activeBorder: 'border-[#f43f5e]', inactiveBg: 'bg-rose-50/50' },
-                                    { id: 3, label: 'Submit', icon: CheckCircle, active: false, activeBg: 'bg-[#10b981]', activeText: 'text-[#10b981]', activeBorder: 'border-[#10b981]', inactiveBg: 'bg-emerald-50/50' }
-                                ].map((s, idx) => (
-                                    <div key={idx} className="flex items-center gap-2 group p-2">
-                                        <div className={`h-12 w-12 rounded-2xl flex items-center justify-center border-2 transition-all duration-500 ${s.active ? `${s.activeBg} ${s.activeBorder} text-white shadow-[0_10px_20px_-5px_rgba(0,0,0,0.1)]` : `bg-white dark:bg-gray-800 border-gray-100 dark:border-gray-700 text-gray-400`}`}>
-                                            <s.icon size={20} />
-                                        </div>
-                                        <div className="flex flex-col">
-                                            <span className={`text-[10px] font-black uppercase tracking-[0.2em] leading-none ${s.active ? s.activeText : 'text-gray-400'}`}>Step 0{s.id}</span>
-                                            <span className={`text-base font-bold ${s.active ? 'text-gray-900 dark:text-white' : 'text-gray-400'}`}>{s.label}</span>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
                         </div>
 
-                        {/* RIGHT COLUMN: INTERACTIVE FORM */}
+                        {/* RIGHT COLUMN: ACTION PANEL */}
                         <div className="lg:col-span-5 flex flex-col h-full">
                             <div className="card p-8 flex flex-col h-full bg-white dark:bg-gray-800 border-t-8 border-t-indigo-600">
                                 <div className="flex items-center gap-3 mb-8">
                                     <div className="p-2.5 bg-indigo-50 dark:bg-indigo-900/40 rounded-xl text-indigo-600">
                                         <IdCard size={22} />
                                     </div>
-                                    <h2 className="text-xl font-black text-gray-900 dark:text-white tracking-tight">Personnel Log</h2>
+                                    <h2 className="text-xl font-black text-gray-900 dark:text-white tracking-tight">Daily Log</h2>
                                 </div>
 
                                 <div className="space-y-6 flex-grow">
-                                    <div>
-                                        <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 block">Identify Employee</label>
-                                        <div className="relative">
-                                            <button
-                                                type="button"
-                                                onClick={toggleDropdown}
-                                                className={`w-full flex justify-between items-center text-left py-3.5 px-5 border-2 rounded-2xl transition-all ${formData.staffId ? 'border-indigo-500 bg-indigo-50/5' : 'border-gray-100 dark:border-gray-700'}`}
-                                            >
-                                                <span className={formData.staffName ? 'font-bold text-base text-indigo-700 dark:text-indigo-400' : 'text-gray-400 font-medium text-sm'}>
-                                                    {formData.staffName || 'Search or Select...'}
-                                                </span>
-                                                <ChevronDown className={`h-4 w-4 text-gray-400 transition-transform ${showDropdown ? 'rotate-180' : ''}`} />
-                                            </button>
 
-                                            {showDropdown && (
-                                                <div className="absolute z-30 w-full mt-2 bg-white dark:bg-gray-800 border-2 border-gray-100 dark:border-gray-700 rounded-2xl shadow-2xl max-h-[300px] overflow-y-auto py-2 animate-fade">
-                                                    <div className="px-4 py-2 sticky top-0 bg-white dark:bg-gray-800 z-10 border-b border-gray-100 dark:border-gray-700 mb-1">
-                                                        <input
-                                                            type="text"
-                                                            placeholder="Search..."
-                                                            className="w-full px-4 py-2 bg-gray-50 dark:bg-gray-900 border-2 border-transparent rounded-lg text-xs font-bold outline-none focus:border-indigo-500/30"
-                                                            value={searchFilter}
-                                                            onChange={(e) => setSearchFilter(e.target.value)}
-                                                            autoFocus
-                                                        />
-                                                    </div>
-                                                    {filteredStaff.length > 0 ? (
-                                                        filteredStaff.map((employee) => (
-                                                            <button
-                                                                key={employee._id}
-                                                                type="button"
-                                                                onClick={() => handleSelectEmployee(employee)}
-                                                                className="w-full px-4 py-3 text-left hover:bg-indigo-50 dark:hover:bg-indigo-900/30 flex items-center gap-3 transition-all group"
-                                                            >
-                                                                <div className="h-8 w-8 bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center font-black text-xs text-gray-500 group-hover:bg-indigo-600 group-hover:text-white transition-all">
-                                                                    {employee.name.charAt(0).toUpperCase()}
-                                                                </div>
-                                                                <div className="flex-1">
-                                                                    <div className="font-bold text-sm text-gray-800 dark:text-gray-200">{employee.name}</div>
-                                                                    <div className="text-[9px] text-gray-400 uppercase font-black tracking-widest mt-0.5">#{employee.staffId}</div>
-                                                                </div>
-                                                            </button>
-                                                        ))
-                                                    ) : (
-                                                        <div className="p-6 text-center text-[10px] font-black text-gray-400 uppercase tracking-widest">Not Found</div>
-                                                    )}
-                                                </div>
-                                            )}
+                                    {/* Staff Info Display (Read Only) */}
+                                    <div className="p-4 bg-gray-50 dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-700 flex items-center gap-4">
+                                        <div className="h-10 w-10 bg-indigo-600 rounded-lg flex items-center justify-center text-white font-black">
+                                            {staffUser.name.charAt(0)}
+                                        </div>
+                                        <div>
+                                            <div className="text-sm font-bold text-gray-900 dark:text-white">{staffUser.name}</div>
+                                            <div className="text-[10px] font-black text-gray-400 uppercase tracking-widest">#{staffUser.staffId}</div>
                                         </div>
                                     </div>
 
@@ -307,7 +232,6 @@ const Home = () => {
                                                 onClick={() => setPunchType('In')}
                                                 className={`py-6 rounded-2xl font-black flex flex-col items-center gap-2 border-2 transition-all ${punchType === 'In' ? 'bg-indigo-600 border-indigo-600 text-white shadow-lg scale-[1.02]' : 'bg-gray-50 dark:bg-gray-900 border-transparent text-gray-400 hover:border-gray-200'}`}
                                             >
-                                                <LogIn size={22} />
                                                 <div className="flex flex-col items-center">
                                                     <span className="text-[9px] uppercase tracking-widest opacity-60">Arrival</span>
                                                     <span className="text-sm">PUNCH IN</span>
@@ -317,7 +241,6 @@ const Home = () => {
                                                 onClick={() => setPunchType('Out')}
                                                 className={`py-6 rounded-2xl font-black flex flex-col items-center gap-2 border-2 transition-all ${punchType === 'Out' ? 'bg-orange-500 border-orange-500 text-white shadow-lg scale-[1.02]' : 'bg-gray-50 dark:bg-gray-900 border-transparent text-gray-400 hover:border-gray-200'}`}
                                             >
-                                                <LogOut size={22} />
                                                 <div className="flex flex-col items-center">
                                                     <span className="text-[9px] uppercase tracking-widest opacity-60">Departure</span>
                                                     <span className="text-sm">PUNCH OUT</span>
@@ -344,7 +267,7 @@ const Home = () => {
                                             ) : (
                                                 <div className="flex items-center justify-center gap-3 uppercase tracking-tighter">
                                                     <CheckCircle size={24} strokeWidth={3} />
-                                                    SUBMIT ACCESS
+                                                    CONFIRM ENTRY
                                                 </div>
                                             )}
                                         </button>
@@ -374,14 +297,14 @@ const Home = () => {
                                 {attendanceStatus === 'Late' ? 'Late Entry Logged' : 'Access Verified!'}
                             </h2>
                             <p className="text-xl text-gray-500 dark:text-gray-400 font-bold leading-tight">
-                                Welcome, <span className="text-indigo-600 dark:text-indigo-400 font-black">{formData.staffName}</span>.
+                                See you later, <span className="text-indigo-600 dark:text-indigo-400 font-black">{formData.staffName}</span>.
                                 <br /> <span className="text-[10px] uppercase font-black tracking-widest opacity-60">Success • {new Date().toLocaleTimeString()}</span>
                             </p>
                         </div>
                         <div className="w-full h-2 bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden mt-4 shadow-inner relative">
                             <div className="absolute inset-y-0 bg-green-500 animate-[loading_5s_linear_forwards]" />
                         </div>
-                        <p className="text-[9px] text-gray-400 uppercase tracking-[0.4em] font-black">Refreshing Portal in 5 Seconds</p>
+                        <p className="text-[9px] text-gray-400 uppercase tracking-[0.4em] font-black">Back to Dashboard in 5 Seconds</p>
                     </div>
                 </div>
             )}
@@ -400,22 +323,7 @@ const Home = () => {
 
                         <form onSubmit={handleApplyLeave} className="p-8 space-y-6">
                             <div className="space-y-4">
-                                <div className="space-y-1.5">
-                                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Your Staff ID</label>
-                                    <select
-                                        required
-                                        className="input-field py-3 cursor-pointer"
-                                        value={leaveFormData.staffId}
-                                        onChange={e => setLeaveFormData({ ...leaveFormData, staffId: e.target.value })}
-                                    >
-                                        <option value="">Select Staff Member</option>
-                                        {staffList.map((staff) => (
-                                            <option key={staff._id || staff.staffId} value={staff.staffId}>
-                                                {staff.name} ({staff.staffId})
-                                            </option>
-                                        ))}
-                                    </select>
-                                </div>
+                                {/* Staff ID is now auto-filled and hidden/disabled */}
 
                                 <div className="space-y-1.5">
                                     <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Type of Leave</label>

@@ -71,6 +71,10 @@ const staffSchema = new mongoose.Schema({
     qrCode: {
         type: String // Base64 of QR code
     },
+    password: {
+        type: String,
+        default: null // Will be set by Admin or default logic
+    },
     createdAt: {
         type: Date,
         default: Date.now
