@@ -24,9 +24,12 @@ exports.addStaff = async (req, res) => {
             emergencyContact, bloodGroup, dateOfBirth, status, salary
         } = req.body;
 
-        const serverIp = process.env.CLIENT_HOST || getNetworkIp();
-        const clientPort = '5173';
-        const qrData = `http://${serverIp}:${clientPort}/?staffId=${encodeURIComponent(staffId)}&name=${encodeURIComponent(name)}`;
+        const isProduction = process.env.NODE_ENV === 'production';
+        const clientUrl = isProduction
+            ? 'https://attendance.tripvenzaholidays.com'
+            : `http://${process.env.CLIENT_HOST || getNetworkIp()}:5173`;
+
+        const qrData = `${clientUrl}/?staffId=${encodeURIComponent(staffId)}&name=${encodeURIComponent(name)}`;
         const qrCodeUrl = await QRCode.toDataURL(qrData);
 
         // SYSTEMATIC FIX: Check for required fields explicitly
@@ -84,9 +87,12 @@ exports.updateStaff = async (req, res) => {
             const idToUse = updates.staffId || currentStaff.staffId;
 
             if (nameToUse && idToUse) {
-                const serverIp = process.env.CLIENT_HOST || getNetworkIp();
-                const clientPort = '5173';
-                const qrData = `http://${serverIp}:${clientPort}/?staffId=${encodeURIComponent(idToUse)}&name=${encodeURIComponent(nameToUse)}`;
+                const isProduction = process.env.NODE_ENV === 'production';
+                const clientUrl = isProduction
+                    ? 'https://attendance.tripvenzaholidays.com'
+                    : `http://${process.env.CLIENT_HOST || getNetworkIp()}:5173`;
+
+                const qrData = `${clientUrl}/?staffId=${encodeURIComponent(idToUse)}&name=${encodeURIComponent(nameToUse)}`;
                 updates.qrCode = await QRCode.toDataURL(qrData);
             }
         }
@@ -133,9 +139,12 @@ exports.deleteStaff = async (req, res) => {
 
 exports.getSystemQR = async (req, res) => {
     try {
-        const serverIp = process.env.CLIENT_HOST || getNetworkIp();
-        const clientPort = '5173';
-        const qrData = `http://${serverIp}:${clientPort}/`;
+        const isProduction = process.env.NODE_ENV === 'production';
+        const clientUrl = isProduction
+            ? 'https://attendance.tripvenzaholidays.com'
+            : `http://${process.env.CLIENT_HOST || getNetworkIp()}:5173`;
+
+        const qrData = `${clientUrl}/`;
 
         const qrCodeUrl = await QRCode.toDataURL(qrData);
 
