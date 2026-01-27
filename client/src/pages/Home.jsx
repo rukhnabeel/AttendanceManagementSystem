@@ -3,7 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import axios from 'axios';
 import DigitalClock from '../components/DigitalClock';
 import CameraOverlay from '../components/CameraOverlay';
-import CameraOverlay from '../components/CameraOverlay';
+
 import {
     IdCard,
     CheckCircle,
