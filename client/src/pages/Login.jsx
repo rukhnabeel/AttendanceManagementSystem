@@ -110,7 +110,7 @@ const Login = () => {
                                             required
                                             type="email"
                                             placeholder="admin@tvh.com"
-                                            className="input-field pl-12 bg-gray-50 dark:bg-gray-900 border-2 border-transparent focus:border-indigo-500 rounded-2xl"
+                                            className="input-field !pl-16 bg-gray-50 dark:bg-gray-900 border-2 border-transparent focus:border-indigo-500 rounded-2xl text-gray-900 dark:text-white"
                                             value={adminEmail}
                                             onChange={(e) => setAdminEmail(e.target.value)}
                                         />
@@ -125,7 +125,7 @@ const Login = () => {
                                             required
                                             type="text"
                                             placeholder="TVH-123"
-                                            className="input-field pl-12 bg-gray-50 dark:bg-gray-900 border-2 border-transparent focus:border-indigo-500 rounded-2xl uppercase"
+                                            className="input-field !pl-16 bg-gray-50 dark:bg-gray-900 border-2 border-transparent focus:border-indigo-500 rounded-2xl uppercase text-gray-900 dark:text-white"
                                             value={staffId}
                                             onChange={(e) => setStaffId(e.target.value)}
                                         />
@@ -141,7 +141,7 @@ const Login = () => {
                                         required
                                         type={showPassword ? "text" : "password"}
                                         placeholder="••••••••"
-                                        className="input-field pl-12 pr-12 bg-gray-50 dark:bg-gray-900 border-2 border-transparent focus:border-indigo-500 rounded-2xl"
+                                        className="input-field !pl-16 pr-12 bg-gray-50 dark:bg-gray-900 border-2 border-transparent focus:border-indigo-500 rounded-2xl text-gray-900 dark:text-white"
                                         value={mode === 'admin' ? adminPassword : staffPassword}
                                         onChange={(e) => mode === 'admin' ? setAdminPassword(e.target.value) : setStaffPassword(e.target.value)}
                                     />
