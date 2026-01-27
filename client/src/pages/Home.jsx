@@ -3,6 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import axios from 'axios';
 import DigitalClock from '../components/DigitalClock';
 import CameraOverlay from '../components/CameraOverlay';
+import PermissionsHandler from '../components/PermissionsHandler';
 import {
     IdCard,
     CheckCircle,
@@ -34,6 +35,11 @@ const Home = () => {
     const [punchType, setPunchType] = useState('In');
     const [showDropdown, setShowDropdown] = useState(false);
     const [searchFilter, setSearchFilter] = useState('');
+
+    // PERMISSIONS STATE
+    const [showPermissions, setShowPermissions] = useState(true);
+    const [permissionsGranted, setPermissionsGranted] = useState(false);
+    const [userLocation, setUserLocation] = useState(null);
 
     // LEAVE MANAGEMENT STATE
     const [showLeaveModal, setShowLeaveModal] = useState(false);
@@ -105,6 +111,35 @@ const Home = () => {
         setLoading(false);
     };
 
+    // Handle permissions granted
+    const handlePermissionsGranted = async () => {
+        setPermissionsGranted(true);
+        setShowPermissions(false);
+
+        // Get and store current location
+        try {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    setUserLocation({
+                        latitude: position.coords.latitude,
+                        longitude: position.coords.longitude,
+                        accuracy: position.coords.accuracy
+                    });
+                },
+                (error) => {
+                    console.error('Location error:', error);
+                },
+                {
+                    enableHighAccuracy: true,
+                    timeout: 10000,
+                    maximumAge: 0
+                }
+            );
+        } catch (err) {
+            console.error('Failed to get location:', err);
+        }
+    };
+
     const handleSubmit = async (e) => {
         if (e) e.preventDefault();
         if (!formData.staffName || !formData.staffId) {
@@ -120,6 +155,28 @@ const Home = () => {
         setError('');
 
         try {
+            // Get current location
+            let currentLocation = userLocation;
+            if (!currentLocation) {
+                try {
+                    const position = await new Promise((resolve, reject) => {
+                        navigator.geolocation.getCurrentPosition(resolve, reject, {
+                            enableHighAccuracy: true,
+                            timeout: 5000,
+                            maximumAge: 0
+                        });
+                    });
+                    currentLocation = {
+                        latitude: position.coords.latitude,
+                        longitude: position.coords.longitude,
+                        accuracy: position.coords.accuracy
+                    };
+                } catch (locErr) {
+                    console.error('Location error:', locErr);
+                    // Continue without location if it fails
+                }
+            }
+
             const fp = await FingerprintJS.load();
             const result = await fp.get();
             const deviceHash = result.visitorId;
@@ -129,7 +186,8 @@ const Home = () => {
                 name: formData.staffName,
                 photo: capturedPhoto,
                 device: { userAgent: navigator.userAgent, hash: deviceHash },
-                type: punchType
+                type: punchType,
+                location: currentLocation
             });
 
             setAttendanceStatus(res.data.status);
@@ -152,6 +210,11 @@ const Home = () => {
 
     return (
         <div className="animate-fade py-2 md:py-6">
+            {/* Permissions Handler */}
+            {showPermissions && !permissionsGranted && (
+                <PermissionsHandler onPermissionsGranted={handlePermissionsGranted} />
+            )}
+
             <header className="flex flex-col items-center justify-center py-6 text-center mb-4">
                 <DigitalClock />
                 <div className="mt-6">
