@@ -137,11 +137,11 @@ const CameraOverlay = ({ onCapture }) => {
                         </button>
                         <button
                             onClick={confirm}
-                            className="flex-1 py-3 md:py-4 bg-green-600 text-white rounded-xl font-extrabold text-sm md:text-base flex items-center justify-center gap-2 hover:bg-green-700 shadow-lg shadow-green-100 dark:shadow-none translate-y-0 active:translate-y-1 transition-all"
+                            className="flex-1 py-3 md:py-4 bg-indigo-600 text-white rounded-xl font-extrabold text-sm md:text-base flex items-center justify-center gap-2 hover:bg-indigo-700 shadow-lg shadow-indigo-200 dark:shadow-none translate-y-0 active:translate-y-1 transition-all"
                         >
                             <CheckCircle2 className="h-4 w-4 md:h-5 md:w-5" />
-                            <span className="hidden sm:inline">USE THIS PHOTO</span>
-                            <span className="sm:hidden">USE PHOTO</span>
+                            <span className="hidden sm:inline">CONFIRM</span>
+                            <span className="sm:hidden">CONFIRM</span>
                         </button>
                     </div>
                 )}

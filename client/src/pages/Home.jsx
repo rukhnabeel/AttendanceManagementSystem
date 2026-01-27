@@ -163,18 +163,7 @@ const Home = () => {
                         Welcome, <span className="text-gradient">{staffUser.name}</span>
                     </h1>
 
-                    {/* Steps Indicator */}
-                    <div className="flex items-center justify-center gap-2 mt-4">
-                        <div className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest flex items-center gap-2 ${step === 1 ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-200' : 'bg-gray-100 text-gray-400'}`}>
-                            <div className="w-4 h-4 rounded-full bg-white text-indigo-600 flex items-center justify-center text-[8px]">1</div>
-                            Verify
-                        </div>
-                        <div className="w-8 h-0.5 bg-gray-200 dark:bg-gray-700" />
-                        <div className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest flex items-center gap-2 ${step === 2 ? 'bg-green-500 text-white shadow-lg shadow-green-200' : 'bg-gray-100 text-gray-400'}`}>
-                            <div className="w-4 h-4 rounded-full bg-white text-green-500 flex items-center justify-center text-[8px]">2</div>
-                            Done
-                        </div>
-                    </div>
+
                 </div>
             </header>
 
