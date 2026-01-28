@@ -73,12 +73,14 @@ exports.markAttendance = async (req, res) => {
                 { latitude: process.env.OFFICE_LAT, longitude: process.env.OFFICE_LONG }
             );
 
-            // Allow 50 meter radius
-            if (distance <= 50) {
+            // Dynamic Radius: 20m for Punch OUT, 50m for Punch IN
+            const allowedRadius = type === 'Out' ? 20 : 50;
+
+            if (distance <= allowedRadius) {
                 gpsVerified = true;
             } else {
                 console.warn(`User ${name} is ${distance}m away from office.`);
-                return res.status(403).json({ message: `You are ${distance}m away from office. You must be within 50m.` });
+                return res.status(403).json({ message: `You are ${distance}m away. Punch ${type} must be within ${allowedRadius}m.` });
             }
         }
 
