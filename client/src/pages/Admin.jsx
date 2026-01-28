@@ -444,7 +444,7 @@ const Admin = () => {
                                                     </td>
                                                     <td className="px-6 py-5">
                                                         <div className="flex justify-center">
-                                                            {log.location ? (
+                                                            {log.location && log.location.latitude && log.location.longitude ? (
                                                                 <a href={`https://www.google.com/maps?q=${log.location.latitude},${log.location.longitude}`} target="_blank" className="p-2 border-2 border-transparent hover:border-indigo-100 dark:hover:border-indigo-900 rounded-xl text-gray-400 hover:text-indigo-600 transition-all">
                                                                     <MapPin size={18} />
                                                                 </a>

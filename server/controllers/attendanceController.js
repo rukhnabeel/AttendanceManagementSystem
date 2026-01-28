@@ -60,20 +60,25 @@ exports.markAttendance = async (req, res) => {
             status = 'Checked Out';
         }
 
-        // 3. Optional: Geo-fencing Validation
+        // 3. Strict: Geo-fencing Validation
         // If OFFICE_LAT/LONG are set in env, check distance
         let gpsVerified = false;
-        if (process.env.OFFICE_LAT && process.env.OFFICE_LONG && location && location.latitude) {
+        if (process.env.OFFICE_LAT && process.env.OFFICE_LONG) {
+            if (!location || !location.latitude || !location.longitude) {
+                return res.status(400).json({ message: 'GPS Location is mandatory. Please enable location.' });
+            }
+
             const distance = geolib.getDistance(
                 { latitude: location.latitude, longitude: location.longitude },
                 { latitude: process.env.OFFICE_LAT, longitude: process.env.OFFICE_LONG }
             );
-            // Allow 200 meter radius
-            if (distance <= 200) {
+
+            // Allow 50 meter radius
+            if (distance <= 50) {
                 gpsVerified = true;
             } else {
                 console.warn(`User ${name} is ${distance}m away from office.`);
-                // We can choose to block or just flag it. For now, we flag.
+                return res.status(403).json({ message: `You are ${distance}m away from office. You must be within 50m.` });
             }
         }
 

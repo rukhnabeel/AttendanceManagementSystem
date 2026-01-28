@@ -107,7 +107,7 @@ const Home = () => {
                     const position = await new Promise((resolve, reject) => {
                         navigator.geolocation.getCurrentPosition(resolve, reject, {
                             enableHighAccuracy: true,
-                            timeout: 5000,
+                            timeout: 10000, // Increased timeout for better GPS lock
                             maximumAge: 0
                         });
                     });
@@ -118,6 +118,14 @@ const Home = () => {
                     };
                 } catch (locErr) {
                     console.error('Location error:', locErr);
+                    let msg = 'Location access is mandatory.';
+                    if (locErr.code === 1) msg = 'Location permission denied. Please enable it in browser settings.';
+                    else if (locErr.code === 2) msg = 'Location unavailable. Check GPS.';
+                    else if (locErr.code === 3) msg = 'Location request timed out.';
+
+                    setError(msg);
+                    setLoading(false);
+                    return; // STOP EXECUTION
                 }
             }
 
