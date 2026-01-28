@@ -13,8 +13,14 @@ exports.markAttendance = async (req, res) => {
         }
 
         const now = new Date();
-        const dateStr = now.toISOString().split('T')[0];
-        const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
+        const dateStr = now.toLocaleDateString('en-CA', { timeZone: 'Asia/Kolkata' });
+        const timeStr = now.toLocaleTimeString('en-US', {
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: true,
+            timeZone: 'Asia/Kolkata'
+        });
 
         // 1. Determine Punch Type (In vs Out)
         // If manual type is provided (from UI toggle), use it. Otherwise, auto-toggle.
@@ -36,8 +42,15 @@ exports.markAttendance = async (req, res) => {
         // 2. Logic for Late/Present (Only applies to Punch In)
         let status = 'Present';
         if (type === 'In') {
-            const hour = now.getHours();
-            const minute = now.getMinutes();
+            const parts = new Intl.DateTimeFormat('en-US', {
+                timeZone: 'Asia/Kolkata',
+                hour: 'numeric',
+                minute: 'numeric',
+                hour12: false
+            }).formatToParts(now);
+
+            const hour = parseInt(parts.find(p => p.type === 'hour').value);
+            const minute = parseInt(parts.find(p => p.type === 'minute').value);
             // OFFICE TIME: 10:00 AM TO 19:00 PM
             // Late rule: After 10:00 AM
             if (hour > 10 || (hour === 10 && minute > 0)) {
@@ -116,9 +129,23 @@ exports.getAttendanceLogs = async (req, res) => {
 exports.exportLogs = async (req, res) => {
     try {
         const logs = await Attendance.find().lean();
+
+        // Transform logs to use IST time from timestamp
+        const transformedLogs = logs.map(log => {
+            if (log.timestamp) {
+                const dateObj = new Date(log.timestamp);
+                return {
+                    ...log,
+                    date: dateObj.toLocaleDateString('en-CA', { timeZone: 'Asia/Kolkata' }),
+                    time: dateObj.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true, timeZone: 'Asia/Kolkata' })
+                };
+            }
+            return log;
+        });
+
         const fields = ['staffId', 'staffName', 'date', 'time', 'status', 'type'];
         const json2csvParser = new Parser({ fields });
-        const csv = json2csvParser.parse(logs);
+        const csv = json2csvParser.parse(transformedLogs);
 
         res.header('Content-Type', 'text/csv');
         res.attachment(`attendance-report.csv`);

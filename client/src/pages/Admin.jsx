@@ -60,7 +60,7 @@ const Admin = () => {
         email: '',
         phone: '',
         shift: 'Morning',
-        joiningDate: new Date().toISOString().split('T')[0],
+        joiningDate: new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Kolkata' }),
         gender: 'Male',
         address: '',
         emergencyContact: '',
@@ -75,7 +75,7 @@ const Admin = () => {
     const [isEditing, setIsEditing] = useState(false);
     const [viewItem, setViewItem] = useState(null);
     const [showSystemQR, setShowSystemQR] = useState(null);
-    const [selectedMonth, setSelectedMonth] = useState(new Date().toISOString().slice(0, 7)); // YYYY-MM
+    const [selectedMonth, setSelectedMonth] = useState(new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Kolkata' }).slice(0, 7)); // YYYY-MM
 
     useEffect(() => {
         const socket = io('/', {
@@ -270,8 +270,8 @@ const Admin = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 {[
                     { label: 'Personnel', value: (Array.isArray(staff) ? staff : []).length, icon: Users, grad: 'from-blue-500 to-indigo-600' },
-                    { label: 'Present Today', value: (Array.isArray(logs) ? logs : []).filter(l => l.date === new Date().toISOString().split('T')[0]).length, icon: UserCheck, grad: 'from-emerald-500 to-teal-600' },
-                    { label: 'Unpunctual', value: (Array.isArray(logs) ? logs : []).filter(l => l.status === 'Late' && l.date === new Date().toISOString().split('T')[0]).length, icon: Clock, grad: 'from-orange-400 to-rose-500' },
+                    { label: 'Present Today', value: (Array.isArray(logs) ? logs : []).filter(l => l.date === new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Kolkata' })).length, icon: UserCheck, grad: 'from-emerald-500 to-teal-600' },
+                    { label: 'Unpunctual', value: (Array.isArray(logs) ? logs : []).filter(l => l.status === 'Late' && l.date === new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Kolkata' })).length, icon: Clock, grad: 'from-orange-400 to-rose-500' },
                     { label: 'Active Status', value: (Array.isArray(staff) ? staff : []).filter(s => s.status === 'Active').length, icon: ShieldCheck, grad: 'from-purple-500 to-pink-600' }
                 ].map((stat, i) => (
                     <div key={i} className="card p-6 flex flex-col gap-4 bg-white dark:bg-gray-800 group hover:scale-[1.02]">
@@ -424,8 +424,12 @@ const Admin = () => {
                                                         </button>
                                                     </td>
                                                     <td className="px-6 py-5">
-                                                        <div className="font-bold text-gray-900 dark:text-gray-200">{log.time}</div>
-                                                        <div className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">{log.date}</div>
+                                                        <div className="font-bold text-gray-900 dark:text-gray-200">
+                                                            {log.timestamp ? new Date(log.timestamp).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true, timeZone: 'Asia/Kolkata' }) : log.time}
+                                                        </div>
+                                                        <div className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">
+                                                            {log.timestamp ? new Date(log.timestamp).toLocaleDateString('en-CA', { timeZone: 'Asia/Kolkata' }) : log.date}
+                                                        </div>
                                                     </td>
                                                     <td className="px-6 py-5">
                                                         <div className={`flex items-center gap-2 font-black uppercase text-[10px] tracking-[0.2em] ${log.type === 'In' ? 'text-blue-600' : 'text-orange-600'}`}>

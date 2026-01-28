@@ -4,7 +4,7 @@ import axios from 'axios';
 import { Lock, ShieldCheck, Mail, ArrowRight, Eye, EyeOff, User, Briefcase } from 'lucide-react';
 
 const Login = () => {
-    const [mode, setMode] = useState('admin'); // 'admin' or 'staff'
+    const [mode, setMode] = useState('staff'); // 'admin' or 'staff'
 
     // Admin State
     const [adminEmail, setAdminEmail] = useState('');
